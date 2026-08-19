@@ -12,7 +12,7 @@
 
 <title>מערכת OCR למק"טים</title>
 
-<!-- Tesseract OCR -->
+
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 
@@ -204,8 +204,6 @@ canvas {
 
   gap: 12px;
 
-  direction: rtl;
-
 }
 
 .result-item input {
@@ -305,14 +303,15 @@ canvas {
 <div class="container">
 
 
-<h1>📦 מערכת OCR למק"טים</h1>
+<h1>
+📦 מערכת OCR למק"טים
+</h1>
+
 
 <div class="subtitle">
 צילום מדף וזיהוי רצפי מספרים ואותיות
 </div>
 
-
-<!-- מצלמה -->
 
 <div class="camera">
 
@@ -356,14 +355,13 @@ canvas {
 <canvas id="canvas"></canvas>
 
 
-<!-- העלאת תמונה -->
-
 <label
   class="file-label"
   for="imageInput"
 >
 🖼️ בחר תמונה מהטלפון
 </label>
+
 
 <input
   id="imageInput"
@@ -381,8 +379,6 @@ canvas {
 >
 
 
-<!-- סטטוס -->
-
 <div
   id="status"
   class="status"
@@ -390,8 +386,6 @@ canvas {
 בחר צילום או תמונה מהטלפון
 </div>
 
-
-<!-- התקדמות -->
 
 <div
   id="progressContainer"
@@ -410,16 +404,12 @@ canvas {
 </div>
 
 
-<!-- תוצאות -->
-
 <div
   id="results"
   class="results"
 >
 </div>
 
-
-<!-- סיכום -->
 
 <div
   id="summary"
@@ -460,6 +450,15 @@ canvas {
 
 
 <script>
+
+
+/************************************************
+ * כתובת Google Apps Script
+ ************************************************/
+
+const APPS_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbwzXZYOs-GnafVOdZvrOdufDI1FPF4Z_e4du8lgjZaRb8CwBe7W40Zo4VqDpgv70gPa1g/exec';
+
 
 
 /************************************************
@@ -562,7 +561,7 @@ async function startCamera() {
 
 
 /************************************************
- * צילום תמונה
+ * צילום
  ************************************************/
 
 function takePhoto() {
@@ -623,7 +622,7 @@ function takePhoto() {
 
 
 /************************************************
- * תמונה מהטלפון
+ * תמונה
  ************************************************/
 
 function imageSelected(event) {
@@ -678,13 +677,6 @@ async function processImage(image) {
       "block";
 
 
-    /*
-     * Tesseract OCR
-     *
-     * eng בלבד מכיוון שאנחנו מחפשים
-     * מספרים ואותיות באנגלית.
-     */
-
     const result =
       await Tesseract.recognize(
 
@@ -706,6 +698,7 @@ async function processImage(image) {
                   Math.round(
                     message.progress * 100
                   );
+
 
                 document
                   .getElementById(
@@ -740,12 +733,10 @@ async function processImage(image) {
     );
 
 
-    /*
-     * חילוץ מועמדים
-     */
-
     candidates =
-      extractPartNumbers(text);
+      extractPartNumbers(
+        text
+      );
 
 
     displayResults(
@@ -778,10 +769,6 @@ async function processImage(image) {
 function extractPartNumbers(text) {
 
 
-  /*
-   * איחוד שורות
-   */
-
   text =
     text
       .toUpperCase()
@@ -802,18 +789,10 @@ function extractPartNumbers(text) {
   let found = [];
 
 
-  /*
-   * כל שורה נבדקת
-   */
-
   for (
     let line of lines
   ) {
 
-
-    /*
-     * הסרת תווים בעייתיים
-     */
 
     let clean =
       line
@@ -822,18 +801,6 @@ function extractPartNumbers(text) {
           " "
         );
 
-
-    /*
-     * מציאת רצפים אפשריים.
-     *
-     * לדוגמה:
-     *
-     * 16 742 109 80
-     *
-     * 1614111980
-     *
-     * 7LPB43
-     */
 
     const matches =
       clean.match(
@@ -853,10 +820,6 @@ function extractPartNumbers(text) {
     ) {
 
 
-      /*
-       * ניקוי רווחים
-       */
-
       candidate =
         candidate
           .replace(
@@ -864,10 +827,6 @@ function extractPartNumbers(text) {
             ""
           );
 
-
-      /*
-       * ניקוי סימנים בתחילת/סוף
-       */
 
       candidate =
         candidate
@@ -881,10 +840,6 @@ function extractPartNumbers(text) {
           );
 
 
-      /*
-       * אורך סביר
-       */
-
       if (
         candidate.length < 3 ||
         candidate.length > 30
@@ -894,10 +849,6 @@ function extractPartNumbers(text) {
 
       }
 
-
-      /*
-       * חייב להכיל לפחות ספרה אחת
-       */
 
       if (
         !/[0-9]/.test(candidate)
@@ -909,7 +860,8 @@ function extractPartNumbers(text) {
 
 
       /*
-       * 3 אותיות רצופות ומעלה = פסילה
+       * 3 אותיות רצופות ומעלה
+       * = פסילה
        */
 
       if (
@@ -920,10 +872,6 @@ function extractPartNumbers(text) {
 
       }
 
-
-      /*
-       * מילות טקסט נפוצות
-       */
 
       const banned = [
 
@@ -953,11 +901,8 @@ function extractPartNumbers(text) {
 
 
       /*
-       * Q1 וכדומה:
-       *
-       * אות + מספר אחד בלבד
-       *
-       * לא נחשב מק"ט.
+       * Q1 / A1 וכדומה
+       * אינם מק"ט.
        */
 
       if (
@@ -969,16 +914,11 @@ function extractPartNumbers(text) {
       }
 
 
-      /*
-       * ניקוד עדיפות
-       */
-
       let priority = 0;
 
 
       /*
-       * מק"טים שמתחילים
-       * ב-16 / 96 / 98
+       * 16 / 96 / 98
        */
 
       if (
@@ -989,11 +929,6 @@ function extractPartNumbers(text) {
 
       }
 
-
-      /*
-       * מק"ט מספרי ארוך
-       */
-
       else if (
         /^\d{5,}$/.test(candidate)
       ) {
@@ -1001,11 +936,6 @@ function extractPartNumbers(text) {
         priority = 70;
 
       }
-
-
-      /*
-       * מק"ט אלפאנומרי
-       */
 
       else if (
         /[A-Z]/.test(candidate) &&
@@ -1015,11 +945,6 @@ function extractPartNumbers(text) {
         priority = 50;
 
       }
-
-
-      /*
-       * מספר קצר יותר
-       */
 
       else {
 
@@ -1071,12 +996,6 @@ function extractPartNumbers(text) {
   }
 
 
-  /*
-   * מיון:
-   *
-   * קודם 16/96/98
-   */
-
   return Array.from(
     unique.values()
   )
@@ -1094,7 +1013,7 @@ function extractPartNumbers(text) {
 
 
 /************************************************
- * הצגת התוצאות
+ * הצגת תוצאות
  ************************************************/
 
 function displayResults(
@@ -1163,6 +1082,10 @@ function displayResults(
 
       checkbox.dataset.index =
         index;
+
+
+      checkbox.onchange =
+        updateSummary;
 
 
       const text =
@@ -1357,9 +1280,17 @@ function updateSummary() {
 
 }
 
-function confirmSelection() {
+
+
+/************************************************
+ * שליחת המק"טים ל-Google Sheets
+ ************************************************/
+
+async function confirmSelection() {
+
 
   const selected = [];
+
 
   document
     .querySelectorAll(
@@ -1373,6 +1304,7 @@ function confirmSelection() {
             checkbox.dataset.index
           );
 
+
         selected.push(
           candidates[index].value
         );
@@ -1381,7 +1313,9 @@ function confirmSelection() {
     );
 
 
-  if (selected.length === 0) {
+  if (
+    selected.length === 0
+  ) {
 
     return;
 
@@ -1389,35 +1323,130 @@ function confirmSelection() {
 
 
   /*
-   * כאן נחבר בהמשך את Google Apps Script.
-   *
-   * אין הודעת alert למשתמש.
+   * מניעת שליחה אם הכתובת
+   * עדיין לא הוגדרה
    */
 
-  console.log(
-    "המק\"טים שנבחרו:",
-    selected
-  );
+  if (
+    APPS_SCRIPT_URL ===
+    'PASTE_YOUR_APPS_SCRIPT_URL_HERE'
+  ) {
+
+    setStatus(
+      "❌ עדיין לא הוגדרה כתובת Google Apps Script",
+      "error"
+    );
+
+    return;
+
+  }
 
 
   /*
-   * ניקוי התוצאות
+   * השבתת הכפתור בזמן השליחה
    */
 
-  clearResults();
+  const button =
+    document.getElementById(
+      "confirm"
+    );
 
 
-  /*
-   * החזרת המערכת למצב מוכן
-   */
+  button.disabled =
+    true;
+
+
+  button.textContent =
+    "⏳ מוסיף...";
+
 
   setStatus(
-    "מוכן לסריקה הבאה"
+    "⏳ מעדכן את המלאי..."
   );
 
+
+  try {
+
+
+    /*
+     * text/plain חשוב כאן:
+     * הוא מונע בקשת preflight
+     * מיותרת מול Google Apps Script.
+     */
+
+    await fetch(
+      APPS_SCRIPT_URL,
+      {
+
+        method: "POST",
+
+        mode: "no-cors",
+
+        headers: {
+
+          "Content-Type":
+            "text/plain;charset=utf-8"
+
+        },
+
+        body:
+          JSON.stringify({
+
+            skus:
+              selected
+
+          })
+
+      }
+    );
+
+
+    /*
+     * אין alert.
+     *
+     * מחזירים את המשתמש
+     * למסך הסריקה.
+     */
+
+    clearResults();
+
+
+    setStatus(
+      "✅ המלאי עודכן<br>מוכן לסריקה הבאה",
+      "success"
+    );
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      error
+    );
+
+
+    setStatus(
+      "❌ לא ניתן לשלוח את הנתונים ל-Google Sheets",
+      "error"
+    );
+
+  }
+
+
+  button.disabled =
+    false;
+
+
+  button.textContent =
+    "✅ הוסף את המק\"טים שנבחרו";
+
 }
+
+
+
 /************************************************
- * ניקוי
+ * ניקוי תוצאות
  ************************************************/
 
 function clearResults() {
@@ -1485,6 +1514,16 @@ function clearResults() {
 
   document
     .getElementById(
+      "progressContainer"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
       "progressBar"
     )
     .style.width =
@@ -1506,7 +1545,8 @@ function stopCamera() {
     stream
       .getTracks()
       .forEach(
-        track => track.stop()
+        track =>
+          track.stop()
       );
 
     stream = null;
