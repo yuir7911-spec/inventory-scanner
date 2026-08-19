@@ -3,169 +3,574 @@
 
 <head>
 
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-<title>סריקת מלאי</title>
+  <title>מערכת סריקת מק"טים</title>
 
-<style>
 
-* {
-  box-sizing: border-box;
-}
+  <!-- ZXing - מנוע קריאת ברקודים -->
+  <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
 
-body {
-  margin: 0;
-  padding: 20px;
-  background: #f4f6f8;
-  font-family: Arial, sans-serif;
-}
 
-.container {
-  max-width: 600px;
-  margin: auto;
-}
+  <style>
 
-h1 {
-  text-align: center;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-button {
-  width: 100%;
-  padding: 16px;
-  margin-top: 12px;
-  border: 0;
-  border-radius: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
 
-.primary {
-  background: #1a73e8;
-  color: white;
-}
+    body {
 
-.danger {
-  background: #d93025;
-  color: white;
-}
+      margin: 0;
 
-.secondary {
-  background: #e8eaed;
-}
+      padding: 20px;
 
-.camera {
-  position: relative;
-  margin-top: 20px;
-  background: black;
-  border-radius: 15px;
-  overflow: hidden;
-}
+      background: #f4f6f8;
 
-video {
-  display: block;
-  width: 100%;
-  min-height: 350px;
-  object-fit: cover;
-}
+      font-family: Arial, sans-serif;
 
-.frame {
-  position: absolute;
-  top: 50%;
-  left: 10%;
-  width: 80%;
-  height: 100px;
-  transform: translateY(-50%);
-  border: 3px solid white;
-  border-radius: 10px;
-}
+      color: #222;
 
-.status {
-  margin-top: 15px;
-  padding: 15px;
-  border-radius: 10px;
-  background: white;
-  text-align: center;
-}
+    }
 
-.success {
-  background: #e6f4ea;
-}
 
-.error {
-  background: #fce8e6;
-}
+    .container {
 
-</style>
+      width: 100%;
+
+      max-width: 600px;
+
+      margin: auto;
+
+    }
+
+
+    h1 {
+
+      text-align: center;
+
+      margin-bottom: 10px;
+
+    }
+
+
+    .subtitle {
+
+      text-align: center;
+
+      color: #666;
+
+      margin-bottom: 20px;
+
+    }
+
+
+    .camera-box {
+
+      position: relative;
+
+      width: 100%;
+
+      background: #000;
+
+      border-radius: 15px;
+
+      overflow: hidden;
+
+    }
+
+
+    #video {
+
+      display: block;
+
+      width: 100%;
+
+      height: auto;
+
+      min-height: 350px;
+
+      max-height: 70vh;
+
+      object-fit: cover;
+
+    }
+
+
+    /*
+     * מסגרת הסריקה
+     */
+
+    .scan-frame {
+
+      position: absolute;
+
+      top: 50%;
+
+      left: 8%;
+
+      width: 84%;
+
+      height: 110px;
+
+      transform: translateY(-50%);
+
+      border: 3px solid white;
+
+      border-radius: 12px;
+
+      pointer-events: none;
+
+      box-shadow:
+        0 0 0 9999px
+        rgba(0,0,0,0.25);
+
+    }
+
+
+    .scan-line {
+
+      position: absolute;
+
+      left: 10%;
+
+      width: 80%;
+
+      top: 50%;
+
+      height: 2px;
+
+      background: red;
+
+      animation: scan 1.8s infinite;
+
+    }
+
+
+    @keyframes scan {
+
+      0% {
+        transform: translateY(-45px);
+      }
+
+      50% {
+        transform: translateY(45px);
+      }
+
+      100% {
+        transform: translateY(-45px);
+      }
+
+    }
+
+
+    button {
+
+      width: 100%;
+
+      padding: 16px;
+
+      margin-top: 12px;
+
+      border: none;
+
+      border-radius: 10px;
+
+      font-size: 18px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+    }
+
+
+    button:disabled {
+
+      opacity: 0.5;
+
+      cursor: default;
+
+    }
+
+
+    .primary {
+
+      background: #1a73e8;
+
+      color: white;
+
+    }
+
+
+    .success-button {
+
+      background: #188038;
+
+      color: white;
+
+    }
+
+
+    .danger {
+
+      background: #d93025;
+
+      color: white;
+
+    }
+
+
+    .secondary {
+
+      background: #e8eaed;
+
+      color: #222;
+
+    }
+
+
+    .status {
+
+      margin-top: 15px;
+
+      padding: 15px;
+
+      border-radius: 10px;
+
+      background: white;
+
+      text-align: center;
+
+      line-height: 1.6;
+
+    }
+
+
+    .success {
+
+      background: #e6f4ea;
+
+      color: #137333;
+
+    }
+
+
+    .error {
+
+      background: #fce8e6;
+
+      color: #c5221f;
+
+    }
+
+
+    .warning {
+
+      background: #fef7e0;
+
+      color: #8a4b00;
+
+    }
+
+
+    .result {
+
+      display: none;
+
+      margin-top: 15px;
+
+      padding: 20px;
+
+      background: white;
+
+      border-radius: 12px;
+
+      box-shadow:
+        0 2px 8px
+        rgba(0,0,0,0.1);
+
+      text-align: center;
+
+    }
+
+
+    .part-number {
+
+      direction: ltr;
+
+      text-align: center;
+
+      font-size: 30px;
+
+      font-weight: bold;
+
+      letter-spacing: 1px;
+
+      margin: 15px 0;
+
+      word-break: break-all;
+
+    }
+
+
+    .barcode-format {
+
+      color: #666;
+
+      font-size: 14px;
+
+    }
+
+
+    .info {
+
+      margin-top: 20px;
+
+      background: white;
+
+      padding: 15px;
+
+      border-radius: 12px;
+
+      line-height: 1.7;
+
+    }
+
+
+    .hidden {
+
+      display: none !important;
+
+    }
+
+
+  </style>
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
-<h1>
-📦 מערכת סריקת מלאי
-</h1>
 
-<button
-  class="primary"
-  onclick="startCamera()"
->
-📷 הפעל מצלמה
-</button>
+  <h1>
+    📦 מערכת סריקת מק"טים
+  </h1>
 
-<div class="camera">
 
-<video
-  id="video"
-  autoplay
-  playsinline
-  muted
-></video>
+  <div class="subtitle">
+    סריקה ידנית של ברקוד
+  </div>
 
-<div class="frame"></div>
+
+  <!-- מצלמה -->
+
+  <div class="camera-box">
+
+    <video
+      id="video"
+      autoplay
+      muted
+      playsinline
+    ></video>
+
+
+    <div class="scan-frame"></div>
+
+    <div class="scan-line"></div>
+
+  </div>
+
+
+  <!-- הפעל מצלמה -->
+
+  <button
+    id="startButton"
+    class="primary"
+    onclick="startScanner()"
+  >
+
+    📷 הפעל מצלמה
+
+  </button>
+
+
+  <!-- עצור -->
+
+  <button
+    id="stopButton"
+    class="danger hidden"
+    onclick="stopScanner()"
+  >
+
+    ⏹ עצור מצלמה
+
+  </button>
+
+
+  <!-- מצב -->
+
+  <div
+    id="status"
+    class="status"
+  >
+
+    לחץ על "הפעל מצלמה"
+
+  </div>
+
+
+  <!-- תוצאה -->
+
+  <div
+    id="resultBox"
+    class="result"
+  >
+
+    <div>
+      ✅ ברקוד זוהה
+    </div>
+
+
+    <div
+      id="partNumber"
+      class="part-number"
+    ></div>
+
+
+    <div
+      id="barcodeFormat"
+      class="barcode-format"
+    ></div>
+
+
+    <button
+      id="addButton"
+      class="success-button"
+      onclick="addBarcode()"
+    >
+
+      ✅ הוסף מק"ט
+
+    </button>
+
+
+    <button
+      class="secondary"
+      onclick="skipBarcode()"
+    >
+
+      ❌ דלג
+
+    </button>
+
+  </div>
+
+
+  <div class="info">
+
+    <strong>איך להשתמש?</strong>
+
+    <br>
+
+    1. לחץ על 📷 הפעל מצלמה.
+
+    <br>
+
+    2. כוון את הברקוד לתוך המסגרת.
+
+    <br>
+
+    3. המתן לזיהוי.
+
+    <br>
+
+    4. בדוק את המק"ט.
+
+    <br>
+
+    5. לחץ ✅ הוסף מק"ט או ❌ דלג.
+
+    <br><br>
+
+    <strong>הערה:</strong>
+    בשלב הזה אנחנו בודקים ברקוד אחד.
+    לאחר שהזיהוי יעבוד, נחבר את Google Sheets
+    ונוסיף סריקה של מספר ברקודים מתוך תמונה.
+
+  </div>
+
 
 </div>
 
-<button
-  id="stopButton"
-  class="danger"
-  onclick="stopCamera()"
-  style="display:none"
->
-⏹ עצור מצלמה
-</button>
 
-<div
-  id="status"
-  class="status"
->
-לחץ על "הפעל מצלמה"
-</div>
-
-</div>
 
 <script>
 
-let stream = null;
+
+/*******************************************************
+ * הגדרות
+ *******************************************************/
 
 
-async function startCamera() {
+let codeReader = null;
 
-  const status =
-    document.getElementById("status");
+let currentBarcode = '';
+
+let scanning = false;
+
+
+/*
+ * מניעת זיהוי חוזר מיידי
+ */
+
+let lastDetected = '';
+
+let lastDetectedTime = 0;
+
+
+/*
+ * זמן המתנה לפני שמאפשרים
+ * לזהות שוב את אותו ברקוד
+ */
+
+const SAME_BARCODE_DELAY = 2500;
+
+
+
+/*******************************************************
+ * הפעלת הסורק
+ *******************************************************/
+
+async function startScanner() {
+
 
   const video =
-    document.getElementById("video");
+    document.getElementById(
+      'video'
+    );
+
+
+  const status =
+    document.getElementById(
+      'status'
+    );
 
 
   try {
+
+
+    /*
+     * בדיקת תמיכה
+     */
 
     if (
       !navigator.mediaDevices ||
@@ -173,99 +578,627 @@ async function startCamera() {
     ) {
 
       throw new Error(
-        "הדפדפן אינו תומך בגישה למצלמה"
+        'הדפדפן אינו מאפשר גישה למצלמה'
       );
 
     }
 
 
-    stream =
-      await navigator.mediaDevices.getUserMedia({
+    /*
+     * יצירת ZXing
+     */
+
+    codeReader =
+      new ZXing.BrowserMultiFormatReader();
+
+
+    scanning = true;
+
+
+    /*
+     * הסתרת תוצאת קוד קודם
+     */
+
+    hideResult();
+
+
+    /*
+     * הפעלת המצלמה
+     */
+
+    await codeReader.decodeFromConstraints(
+
+      {
 
         video: {
 
           facingMode: {
-            ideal: "environment"
+            ideal: 'environment'
+          },
+
+          width: {
+            ideal: 1280
+          },
+
+          height: {
+            ideal: 720
           }
 
         },
 
         audio: false
 
-      });
+      },
+
+      video,
+
+      function(
+        result,
+        error
+      ) {
 
 
-    video.srcObject = stream;
+        /*
+         * אם לא נמצא ברקוד,
+         * ZXing מחזיר שגיאה זמנית.
+         *
+         * זה תקין ולכן לא מציגים אותה.
+         */
+
+        if (result) {
+
+          handleBarcode(
+            result
+          );
+
+        }
+
+      }
+
+    );
+
+
+    /*
+     * ממשק
+     */
+
+    document
+      .getElementById(
+        'startButton'
+      )
+      .classList.add(
+        'hidden'
+      );
 
 
     document
-      .getElementById("stopButton")
-      .style.display = "block";
+      .getElementById(
+        'stopButton'
+      )
+      .classList.remove(
+        'hidden'
+      );
 
 
     status.className =
-      "status success";
+      'status success';
 
 
     status.innerHTML =
-      "✅ המצלמה פעילה";
+      '📷 המצלמה פעילה<br>' +
+      'כוון את הברקוד לתוך המסגרת';
+
 
   }
 
   catch (error) {
 
-    console.error(error);
+
+    console.error(
+      error
+    );
+
+
+    scanning = false;
 
 
     status.className =
-      "status error";
+      'status error';
 
 
     status.innerHTML =
-      "❌ לא ניתן לפתוח את המצלמה<br><br>" +
-      error.message;
+
+      '❌ לא ניתן להפעיל את הסורק.<br><br>' +
+
+      escapeHtml(
+        error.message ||
+        String(error)
+      );
 
   }
 
 }
 
 
-function stopCamera() {
 
-  if (stream) {
+/*******************************************************
+ * טיפול בברקוד שזוהה
+ *******************************************************/
 
-    stream
-      .getTracks()
-      .forEach(track => track.stop());
+function handleBarcode(
+  result
+) {
 
-    stream = null;
+
+  if (!scanning) {
+
+    return;
+
+  }
+
+
+  /*
+   * קבלת הטקסט
+   */
+
+  let value =
+    result.getText();
+
+
+  /*
+   * ניקוי המק"ט
+   */
+
+  value =
+    cleanPartNumber(
+      value
+    );
+
+
+  /*
+   * אם אין ערך
+   */
+
+  if (!value) {
+
+    return;
+
+  }
+
+
+  /*
+   * מניעת זיהוי חוזר
+   */
+
+  const now =
+    Date.now();
+
+
+  if (
+
+    value === lastDetected &&
+
+    now - lastDetectedTime <
+      SAME_BARCODE_DELAY
+
+  ) {
+
+    return;
+
+  }
+
+
+  lastDetected =
+    value;
+
+
+  lastDetectedTime =
+    now;
+
+
+  /*
+   * שמירת התוצאה
+   */
+
+  currentBarcode =
+    value;
+
+
+  /*
+   * הצגת התוצאה
+   */
+
+  document
+    .getElementById(
+      'partNumber'
+    )
+    .textContent =
+      value;
+
+
+  /*
+   * סוג הברקוד
+   */
+
+  let format = '';
+
+
+  try {
+
+    format =
+      result
+        .getBarcodeFormat()
+        .toString();
+
+  }
+
+  catch (e) {
+
+    format =
+      'ברקוד';
 
   }
 
 
   document
-    .getElementById("video")
-    .srcObject = null;
+    .getElementById(
+      'barcodeFormat'
+    )
+    .textContent =
+      'סוג: ' +
+      format;
+
+
+  /*
+   * הצגת תוצאה
+   */
+
+  document
+    .getElementById(
+      'resultBox'
+    )
+    .style.display =
+      'block';
 
 
   document
-    .getElementById("stopButton")
-    .style.display = "none";
+    .getElementById(
+      'status'
+    )
+    .className =
+      'status success';
 
 
   document
-    .getElementById("status")
-    .className = "status";
-
-
-  document
-    .getElementById("status")
+    .getElementById(
+      'status'
+    )
     .innerHTML =
-      "המצלמה הופסקה";
+      '✅ ברקוד זוהה בהצלחה';
+
 
 }
+
+
+
+/*******************************************************
+ * ניקוי מק"ט
+ *******************************************************/
+
+function cleanPartNumber(
+  value
+) {
+
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+
+    return '';
+
+  }
+
+
+  let result =
+    String(value)
+      .trim()
+      .toUpperCase();
+
+
+  /*
+   * הסרת רווחים
+   *
+   * לדוגמה:
+   *
+   * 16 141 119 80
+   *
+   * ↓
+   *
+   * 1614111980
+   */
+
+  result =
+    result.replace(
+      /\s+/g,
+      ''
+    );
+
+
+  /*
+   * השארת:
+   *
+   * A-Z
+   * 0-9
+   * -
+   * _
+   * .
+   * /
+   */
+
+  result =
+    result.replace(
+      /[^A-Z0-9._\/-]/g,
+      ''
+    );
+
+
+  return result;
+
+}
+
+
+
+/*******************************************************
+ * הוספת המק"ט
+ *******************************************************/
+
+function addBarcode() {
+
+
+  if (!currentBarcode) {
+
+    return;
+
+  }
+
+
+  /*
+   * בשלב הנוכחי אנחנו רק בודקים
+   * שהזיהוי עובד.
+   *
+   * עדיין לא שולחים ל-Google Sheets.
+   */
+
+  alert(
+
+    'המק"ט שאושר:\n\n' +
+
+    currentBarcode
+
+  );
+
+
+  /*
+   * לאחר האישור
+   * מאפשרים סריקה נוספת.
+   */
+
+  hideResult();
+
+
+  currentBarcode =
+    '';
+
+
+  document
+    .getElementById(
+      'status'
+    )
+    .className =
+      'status success';
+
+
+  document
+    .getElementById(
+      'status'
+    )
+    .innerHTML =
+      'מוכן לסריקה הבאה';
+
+}
+
+
+
+/*******************************************************
+ * דילוג על מק"ט
+ *******************************************************/
+
+function skipBarcode() {
+
+
+  currentBarcode =
+    '';
+
+
+  hideResult();
+
+
+  document
+    .getElementById(
+      'status'
+    )
+    .className =
+      'status warning';
+
+
+  document
+    .getElementById(
+      'status'
+    )
+    .innerHTML =
+      'המק"ט נדחה — מוכן לסריקה הבאה';
+
+}
+
+
+
+/*******************************************************
+ * הסתרת תוצאה
+ *******************************************************/
+
+function hideResult() {
+
+
+  document
+    .getElementById(
+      'resultBox'
+    )
+    .style.display =
+      'none';
+
+}
+
+
+
+/*******************************************************
+ * עצירת הסורק
+ *******************************************************/
+
+function stopScanner() {
+
+
+  scanning = false;
+
+
+  if (codeReader) {
+
+    try {
+
+      codeReader.reset();
+
+    }
+
+    catch (e) {
+
+      console.log(e);
+
+    }
+
+  }
+
+
+  codeReader =
+    null;
+
+
+  const video =
+    document.getElementById(
+      'video'
+    );
+
+
+  if (
+    video.srcObject
+  ) {
+
+    video.srcObject
+      .getTracks()
+      .forEach(
+        function(track) {
+
+          track.stop();
+
+        }
+      );
+
+  }
+
+
+  video.srcObject =
+    null;
+
+
+  document
+    .getElementById(
+      'startButton'
+    )
+    .classList.remove(
+      'hidden'
+    );
+
+
+  document
+    .getElementById(
+      'stopButton'
+    )
+    .classList.add(
+      'hidden'
+    );
+
+
+  hideResult();
+
+
+  document
+    .getElementById(
+      'status'
+    )
+    .className =
+      'status';
+
+
+  document
+    .getElementById(
+      'status'
+    )
+    .innerHTML =
+      'המצלמה הופסקה';
+
+}
+
+
+
+/*******************************************************
+ * אבטחת הצגת טקסט
+ *******************************************************/
+
+function escapeHtml(
+  text
+) {
+
+  return String(text)
+
+    .replace(
+      /&/g,
+      '&amp;'
+    )
+
+    .replace(
+      /</g,
+      '&lt;'
+    )
+
+    .replace(
+      />/g,
+      '&gt;'
+    )
+
+    .replace(
+      /"/g,
+      '&quot;'
+    )
+
+    .replace(
+      /'/g,
+      '&#039;'
+    );
+
+}
+
 
 </script>
+
 
 </body>
 
