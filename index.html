@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>סריקת מלאי</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  background: #f4f6f8;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+}
+
+button {
+  width: 100%;
+  padding: 16px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary {
+  background: #1a73e8;
+  color: white;
+}
+
+.danger {
+  background: #d93025;
+  color: white;
+}
+
+.secondary {
+  background: #e8eaed;
+}
+
+.camera {
+  position: relative;
+  margin-top: 20px;
+  background: black;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+video {
+  display: block;
+  width: 100%;
+  min-height: 350px;
+  object-fit: cover;
+}
+
+.frame {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  width: 80%;
+  height: 100px;
+  transform: translateY(-50%);
+  border: 3px solid white;
+  border-radius: 10px;
+}
+
+.status {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  background: white;
+  text-align: center;
+}
+
+.success {
+  background: #e6f4ea;
+}
+
+.error {
+  background: #fce8e6;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+📦 מערכת סריקת מלאי
+</h1>
+
+<button
+  class="primary"
+  onclick="startCamera()"
+>
+📷 הפעל מצלמה
+</button>
+
+<div class="camera">
+
+<video
+  id="video"
+  autoplay
+  playsinline
+  muted
+></video>
+
+<div class="frame"></div>
+
+</div>
+
+<button
+  id="stopButton"
+  class="danger"
+  onclick="stopCamera()"
+  style="display:none"
+>
+⏹ עצור מצלמה
+</button>
+
+<div
+  id="status"
+  class="status"
+>
+לחץ על "הפעל מצלמה"
+</div>
+
+</div>
+
+<script>
+
+let stream = null;
+
+
+async function startCamera() {
+
+  const status =
+    document.getElementById("status");
+
+  const video =
+    document.getElementById("video");
+
+
+  try {
+
+    if (
+      !navigator.mediaDevices ||
+      !navigator.mediaDevices.getUserMedia
+    ) {
+
+      throw new Error(
+        "הדפדפן אינו תומך בגישה למצלמה"
+      );
+
+    }
+
+
+    stream =
+      await navigator.mediaDevices.getUserMedia({
+
+        video: {
+
+          facingMode: {
+            ideal: "environment"
+          }
+
+        },
+
+        audio: false
+
+      });
+
+
+    video.srcObject = stream;
+
+
+    document
+      .getElementById("stopButton")
+      .style.display = "block";
+
+
+    status.className =
+      "status success";
+
+
+    status.innerHTML =
+      "✅ המצלמה פעילה";
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+
+    status.className =
+      "status error";
+
+
+    status.innerHTML =
+      "❌ לא ניתן לפתוח את המצלמה<br><br>" +
+      error.message;
+
+  }
+
+}
+
+
+function stopCamera() {
+
+  if (stream) {
+
+    stream
+      .getTracks()
+      .forEach(track => track.stop());
+
+    stream = null;
+
+  }
+
+
+  document
+    .getElementById("video")
+    .srcObject = null;
+
+
+  document
+    .getElementById("stopButton")
+    .style.display = "none";
+
+
+  document
+    .getElementById("status")
+    .className = "status";
+
+
+  document
+    .getElementById("status")
+    .innerHTML =
+      "המצלמה הופסקה";
+
+}
+
+</script>
+
+</body>
+
+</html>
