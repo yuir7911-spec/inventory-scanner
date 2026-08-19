@@ -1357,8 +1357,6 @@ function updateSummary() {
 
 }
 
-
-
 function confirmSelection() {
 
   const selected = [];
@@ -1391,19 +1389,33 @@ function confirmSelection() {
 
 
   /*
-   * בשלב הבא כאן נחבר את
-   * selected ל-Google Sheets.
+   * כאן נחבר בהמשך את Google Apps Script.
    *
-   * אין הודעת אישור.
+   * אין הודעת alert למשתמש.
    */
 
   console.log(
-    "מק\"טים שנבחרו:",
+    "המק\"טים שנבחרו:",
     selected
   );
 
-}
 
+  /*
+   * ניקוי התוצאות
+   */
+
+  clearResults();
+
+
+  /*
+   * החזרת המערכת למצב מוכן
+   */
+
+  setStatus(
+    "מוכן לסריקה הבאה"
+  );
+
+}
 /************************************************
  * ניקוי
  ************************************************/
