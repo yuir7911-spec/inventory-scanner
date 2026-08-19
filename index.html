@@ -1359,15 +1359,9 @@ function updateSummary() {
 
 
 
-/************************************************
- * אישור
- ************************************************/
-
 function confirmSelection() {
 
-
   const selected = [];
-
 
   document
     .querySelectorAll(
@@ -1381,7 +1375,6 @@ function confirmSelection() {
             checkbox.dataset.index
           );
 
-
         selected.push(
           candidates[index].value
         );
@@ -1390,13 +1383,7 @@ function confirmSelection() {
     );
 
 
-  if (
-    selected.length === 0
-  ) {
-
-    alert(
-      "לא נבחר אף מק\"ט"
-    );
+  if (selected.length === 0) {
 
     return;
 
@@ -1404,21 +1391,18 @@ function confirmSelection() {
 
 
   /*
-   * כרגע רק מציגים.
+   * בשלב הבא כאן נחבר את
+   * selected ל-Google Sheets.
    *
-   * בשלב הבא נחבר את זה
-   * ל-Google Sheets.
+   * אין הודעת אישור.
    */
 
-  alert(
-    "המק\"טים שנבחרו:\n\n" +
-    selected.join("\n")
+  console.log(
+    "מק\"טים שנבחרו:",
+    selected
   );
 
-
 }
-
-
 
 /************************************************
  * ניקוי
