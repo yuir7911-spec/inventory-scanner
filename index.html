@@ -945,9 +945,7 @@ async function sendImageToGemini(
  * הצגת תוצאות
  ************************************************/
 
-function displayResults(
-    parts
-) {
+function displayResults(parts) {
 
     const container =
         document.getElementById(
@@ -955,228 +953,268 @@ function displayResults(
         );
 
 
-    container.innerHTML =
-        "";
+    container.innerHTML = "";
 
 
-    if (
-        !parts.length
-    ) {
+    if (!parts.length) {
 
-        container.classList
-            .add("hidden");
-
+        container.classList.add(
+            "hidden"
+        );
 
         document
             .getElementById("summary")
-            .classList
-            .add("hidden");
-
+            .classList.add("hidden");
 
         return;
-
     }
 
 
-    parts.forEach(
+    parts.forEach(function(item, index) {
 
-        function(item, index) {
-
-
-            const row =
-                document.createElement(
-                    "div"
-                );
-
-
-            row.className =
-                "result-item";
-
-
-            /*
-             * checkbox
-             */
-
-            const checkbox =
-                document.createElement(
-                    "input"
-                );
-
-
-            checkbox.type =
-                "checkbox";
-
-
-            checkbox.checked =
-                false;
-
-
-            checkbox.dataset.index =
-                index;
-
-
-            checkbox.addEventListener(
-                "change",
-                updateSummary
+        const row =
+            document.createElement(
+                "div"
             );
 
 
-            /*
-             * מק"ט
-             */
-
-            const part =
-                document.createElement(
-                    "div"
-                );
+        row.className =
+            "result-item";
 
 
-            part.className =
-                "part-number";
+        /******************************************
+         * CHECKBOX
+         ******************************************/
 
-
-            part.textContent =
-                item.partNumber;
-
-
-            /*
-             * מקור
-             */
-
-            const source =
-                document.createElement(
-                    "div"
-                );
-
-
-            source.className =
-                "source";
-
-
-            if (
-                item.source ===
-                "handwritten"
-            ) {
-
-                source.textContent =
-                    "✍️ כתב יד";
-
-            }
-
-            else if (
-                item.source ===
-                "printed"
-            ) {
-
-                source.textContent =
-                    "🖨️ מודפס";
-
-            }
-
-            else {
-
-                source.textContent =
-                    "❓ לא ודאי";
-
-            }
-
-
-            /*
-             * confidence
-             */
-
-            const confidence =
-                Number(
-                    item.confidence
-                ) || 0;
-
-
-            if (
-                confidence >= 0.85
-            ) {
-
-                source.classList
-                    .add("high");
-
-            }
-
-            else if (
-                confidence >= 0.65
-            ) {
-
-                source.classList
-                    .add("medium");
-
-            }
-
-            else {
-
-                source.classList
-                    .add("low");
-
-            }
-
-
-            /*
-             * בניית שורה
-             */
-
-            row.appendChild(
-                checkbox
+        const checkbox =
+            document.createElement(
+                "input"
             );
 
 
-            row.appendChild(
-                part
+        checkbox.type =
+            "checkbox";
+
+
+        checkbox.checked =
+            false;
+
+
+        checkbox.dataset.index =
+            index;
+
+
+        checkbox.addEventListener(
+            "change",
+            updateSummary
+        );
+
+
+        /******************************************
+         * אזור טקסט
+         ******************************************/
+
+        const textArea =
+            document.createElement(
+                "div"
             );
 
 
-            row.appendChild(
-                source
+        textArea.style.flex =
+            "1";
+
+
+        /******************************************
+         * מק"ט
+         ******************************************/
+
+        const part =
+            document.createElement(
+                "div"
             );
 
 
-            container.appendChild(
-                row
+        part.className =
+            "part-number";
+
+
+        part.textContent =
+            item.partNumber;
+
+
+        /******************************************
+         * Confidence
+         ******************************************/
+
+        const confidence =
+            Number(
+                item.confidence
+            ) || 0;
+
+
+        const confidenceBox =
+            document.createElement(
+                "div"
             );
+
+
+        confidenceBox.style
+            .fontSize =
+            "13px";
+
+
+        confidenceBox.style
+            .marginTop =
+            "5px";
+
+
+        if (confidence < 0.98) {
+
+            confidenceBox.textContent =
+                "⚠️ זיהוי " +
+                Math.round(
+                    confidence * 100
+                ) +
+                "% — מומלץ לבדוק";
+
+
+            confidenceBox.style.color =
+                "#d93025";
+
+
+            confidenceBox.style.fontWeight =
+                "bold";
 
         }
 
+        else {
+
+            confidenceBox.textContent =
+                "✓ זיהוי " +
+                Math.round(
+                    confidence * 100
+                ) +
+                "%";
+
+
+            confidenceBox.style.color =
+                "#188038";
+
+        }
+
+
+        /******************************************
+         * מקור
+         ******************************************/
+
+        const source =
+            document.createElement(
+                "div"
+            );
+
+
+        source.style
+            .fontSize =
+            "12px";
+
+
+        source.style
+            .color =
+            "#666";
+
+
+        if (
+            item.source ===
+            "handwritten"
+        ) {
+
+            source.textContent =
+                "✍️ כתב יד";
+
+        }
+
+        else if (
+            item.source ===
+            "printed"
+        ) {
+
+            source.textContent =
+                "🖨️ מודפס";
+
+        }
+
+        else {
+
+            source.textContent =
+                "❓ לא ודאי";
+
+        }
+
+
+        /******************************************
+         * בניית השורה
+         ******************************************/
+
+        textArea.appendChild(
+            part
+        );
+
+
+        textArea.appendChild(
+            source
+        );
+
+
+        textArea.appendChild(
+            confidenceBox
+        );
+
+
+        row.appendChild(
+            checkbox
+        );
+
+
+        row.appendChild(
+            textArea
+        );
+
+
+        container.appendChild(
+            row
+        );
+
+    });
+
+
+    container.classList.remove(
+        "hidden"
     );
-
-
-    container.classList
-        .remove("hidden");
 
 
     document
         .getElementById("selectAll")
-        .classList
-        .remove("hidden");
+        .classList.remove("hidden");
 
 
     document
         .getElementById("clearAll")
-        .classList
-        .remove("hidden");
+        .classList.remove("hidden");
 
 
     document
         .getElementById("sendButton")
-        .classList
-        .remove("hidden");
+        .classList.remove("hidden");
 
 
     document
         .getElementById("summary")
-        .classList
-        .remove("hidden");
+        .classList.remove("hidden");
 
 
     updateSummary();
 
 }
-
 
 
 /************************************************
