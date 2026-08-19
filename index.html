@@ -12,9 +12,7 @@
 
 <title>מערכת OCR למק"טים</title>
 
-
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-
 
 <style>
 
@@ -23,273 +21,206 @@
 }
 
 body {
-
   margin: 0;
-
   padding: 15px;
-
   background: #f3f5f7;
-
   font-family: Arial, sans-serif;
-
   color: #222;
-
 }
 
 .container {
-
-  max-width: 650px;
-
+  max-width: 700px;
   margin: auto;
-
 }
 
 h1 {
-
   text-align: center;
-
   margin-bottom: 5px;
-
+  font-size: 32px;
 }
 
 .subtitle {
-
   text-align: center;
-
   color: #666;
-
   margin-bottom: 20px;
-
 }
 
 button {
-
   width: 100%;
-
   border: none;
-
-  border-radius: 10px;
-
-  padding: 16px;
-
+  border-radius: 12px;
+  padding: 17px;
   margin-top: 10px;
-
-  font-size: 18px;
-
+  font-size: 19px;
   font-weight: bold;
-
 }
 
 .primary {
-
   background: #1a73e8;
-
   color: white;
-
 }
 
 .success {
-
   background: #188038;
-
   color: white;
-
 }
 
 .danger {
-
   background: #d93025;
-
   color: white;
-
 }
 
 .gray {
-
   background: #e8eaed;
-
   color: #222;
+}
 
+button:disabled {
+  opacity: 0.6;
 }
 
 .camera {
-
   position: relative;
-
   background: black;
-
   border-radius: 15px;
-
   overflow: hidden;
-
+  min-height: 250px;
 }
 
 video {
-
   width: 100%;
-
   display: block;
-
 }
 
 canvas {
-
   display: none;
-
-}
-
-.status {
-
-  background: white;
-
-  padding: 15px;
-
-  margin-top: 15px;
-
-  border-radius: 10px;
-
-  text-align: center;
-
-  line-height: 1.6;
-
-}
-
-.progress {
-
-  width: 100%;
-
-  height: 12px;
-
-  background: #ddd;
-
-  border-radius: 10px;
-
-  overflow: hidden;
-
-  margin-top: 10px;
-
-}
-
-.progress-bar {
-
-  width: 0%;
-
-  height: 100%;
-
-  background: #1a73e8;
-
-  transition: width .2s;
-
-}
-
-.results {
-
-  margin-top: 20px;
-
-}
-
-.result-item {
-
-  background: white;
-
-  padding: 15px;
-
-  margin-top: 10px;
-
-  border-radius: 10px;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 12px;
-
-}
-
-.result-item input {
-
-  width: 25px;
-
-  height: 25px;
-
-}
-
-.part {
-
-  direction: ltr;
-
-  text-align: left;
-
-  font-size: 21px;
-
-  font-weight: bold;
-
-  flex: 1;
-
-}
-
-.priority {
-
-  font-size: 12px;
-
-  color: #188038;
-
-}
-
-.preview {
-
-  width: 100%;
-
-  margin-top: 15px;
-
-  border-radius: 10px;
-
-  display: none;
-
-}
-
-.hidden {
-
-  display: none !important;
-
 }
 
 .file-label {
-
   display: block;
-
   width: 100%;
-
-  padding: 16px;
-
+  padding: 17px;
   margin-top: 10px;
-
   background: #5f6368;
-
   color: white;
-
-  border-radius: 10px;
-
+  border-radius: 12px;
   text-align: center;
-
-  font-size: 18px;
-
+  font-size: 19px;
   font-weight: bold;
+}
 
+.hidden {
+  display: none !important;
+}
+
+.preview {
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 12px;
+}
+
+.status {
+  background: white;
+  padding: 16px;
+  margin-top: 15px;
+  border-radius: 12px;
+  text-align: center;
+  line-height: 1.6;
+  font-size: 17px;
+}
+
+.progress {
+  width: 100%;
+  height: 14px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background: #1a73e8;
+  transition: width .2s;
+}
+
+.results {
+  margin-top: 20px;
+}
+
+.result-item {
+  background: white;
+  padding: 14px;
+  margin-top: 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+
+.result-item input {
+  width: 26px;
+  height: 26px;
+}
+
+.part {
+  direction: ltr;
+  text-align: left;
+  font-size: 21px;
+  font-weight: bold;
+  flex: 1;
+  word-break: break-all;
+}
+
+.priority {
+  font-size: 12px;
+  color: #188038;
+  white-space: nowrap;
+}
+
+.raw-box {
+  background: #202124;
+  color: #eee;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 12px;
+  direction: ltr;
+  text-align: left;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 350px;
+  overflow: auto;
+  font-size: 13px;
+}
+
+.raw-title {
+  background: #202124;
+  color: white;
+  padding: 12px;
+  margin-top: 20px;
+  border-radius: 12px 12px 0 0;
+  font-weight: bold;
 }
 
 .summary {
-
   background: white;
-
   padding: 15px;
-
-  border-radius: 10px;
-
+  border-radius: 12px;
   margin-top: 15px;
-
   text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
 
+.info {
+  background: #e8f0fe;
+  color: #174ea6;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 15px;
+  line-height: 1.5;
 }
 
 </style>
@@ -299,14 +230,10 @@ canvas {
 
 <body>
 
-
 <div class="container">
 
 
-<h1>
-📦 מערכת OCR למק"טים
-</h1>
-
+<h1>📦 מערכת OCR למק"טים</h1>
 
 <div class="subtitle">
 צילום מדף וזיהוי רצפי מספרים ואותיות
@@ -375,7 +302,7 @@ canvas {
 
 <img
   id="preview"
-  class="preview"
+  class="preview hidden"
 >
 
 
@@ -383,7 +310,7 @@ canvas {
   id="status"
   class="status"
 >
-בחר צילום או תמונה מהטלפון
+צלם מדף או בחר תמונה מהטלפון
 </div>
 
 
@@ -406,7 +333,7 @@ canvas {
 
 <div
   id="results"
-  class="results"
+  class="results hidden"
 >
 </div>
 
@@ -445,8 +372,21 @@ canvas {
 </button>
 
 
+<div
+  id="rawTitle"
+  class="raw-title hidden"
+>
+🔎 טקסט OCR גולמי
 </div>
 
+
+<pre
+  id="rawText"
+  class="raw-box hidden"
+></pre>
+
+
+</div>
 
 
 <script>
@@ -454,10 +394,12 @@ canvas {
 
 /************************************************
  * כתובת Google Apps Script
+ *
+ * השאר כאן את הכתובת שכבר עובדת אצלך
  ************************************************/
 
 const APPS_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbwzXZYOs-GnafVOdZvrOdufDI1FPF4Z_e4du8lgjZaRb8CwBe7W40Zo4VqDpgv70gPa1g/exec';
+  'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
 
 
 
@@ -468,6 +410,8 @@ const APPS_SCRIPT_URL =
 let stream = null;
 
 let candidates = [];
+
+let rawOCRText = "";
 
 
 
@@ -539,7 +483,7 @@ async function startCamera() {
 
 
     setStatus(
-      "📷 המצלמה פעילה<br>כוון את המצלמה אל המדף"
+      "📷 המצלמה פעילה<br>כוון אל המדף ולחץ צילום"
     );
 
   }
@@ -550,8 +494,7 @@ async function startCamera() {
 
     setStatus(
       "❌ לא ניתן לפתוח את המצלמה<br>" +
-      error.message,
-      "error"
+      error.message
     );
 
   }
@@ -622,7 +565,7 @@ function takePhoto() {
 
 
 /************************************************
- * תמונה
+ * בחירת תמונה
  ************************************************/
 
 function imageSelected(event) {
@@ -645,7 +588,7 @@ function imageSelected(event) {
 
 
 /************************************************
- * OCR
+ * עיבוד תמונה ראשי
  ************************************************/
 
 async function processImage(image) {
@@ -656,86 +599,72 @@ async function processImage(image) {
 
 
     setStatus(
-      "🔎 מתחיל עיבוד התמונה..."
+      "🔎 מכין את התמונה ל-OCR..."
     );
 
 
     document
-      .getElementById("progressContainer")
-      .classList.remove("hidden");
+      .getElementById(
+        "progressContainer"
+      )
+      .classList
+      .remove("hidden");
 
 
     const preview =
-      document.getElementById("preview");
+      document.getElementById(
+        "preview"
+      );
 
 
     preview.src =
       URL.createObjectURL(image);
 
 
-    preview.style.display =
-      "block";
+    preview.classList
+      .remove("hidden");
 
 
-    const result =
-      await Tesseract.recognize(
+    /*
+     * המרת התמונה ל-ImageBitmap
+     */
 
-        image,
-
-        "eng",
-
-        {
-
-          logger:
-            function(message) {
-
-              if (
-                message.status ===
-                "recognizing text"
-              ) {
-
-                const percent =
-                  Math.round(
-                    message.progress * 100
-                  );
-
-
-                document
-                  .getElementById(
-                    "progressBar"
-                  )
-                  .style.width =
-                    percent + "%";
-
-
-                setStatus(
-                  "🔎 קורא את התמונה... " +
-                  percent +
-                  "%"
-                );
-
-              }
-
-            }
-
-        }
-
+    const bitmap =
+      await createImageBitmap(
+        image
       );
 
 
-    const text =
-      result.data.text;
+    /*
+     * OCR במספר אזורים
+     */
+
+    const result =
+      await scanImageInTiles(
+        bitmap
+      );
 
 
-    console.log(
-      "OCR RESULT:",
-      text
+    rawOCRText =
+      result.rawText;
+
+
+    /*
+     * הצגת OCR גולמי
+     */
+
+    showRawText(
+      rawOCRText
     );
 
 
+    /*
+     * חילוץ מק"טים
+     */
+
     candidates =
       extractPartNumbers(
-        text
+        rawOCRText
       );
 
 
@@ -751,9 +680,8 @@ async function processImage(image) {
     console.error(error);
 
     setStatus(
-      "❌ אירעה שגיאה בקריאת התמונה<br>" +
-      error.message,
-      "error"
+      "❌ שגיאה בעיבוד התמונה<br>" +
+      error.message
     );
 
   }
@@ -763,47 +691,566 @@ async function processImage(image) {
 
 
 /************************************************
- * חילוץ מק"טים
+ * סריקת התמונה באזורים
  ************************************************/
 
-function extractPartNumbers(text) {
+async function scanImageInTiles(
+  bitmap
+) {
+
+  /*
+   * 3 עמודות × 3 שורות
+   *
+   * עם חפיפה בין האזורים.
+   *
+   * כך כל מק"ט מקבל סיכוי
+   * להיות גדול מספיק עבור OCR.
+   */
+
+  const cols = 3;
+
+  const rows = 3;
+
+  const overlap = 0.15;
 
 
-  text =
-    text
-      .toUpperCase()
-      .replace(/\r/g, "\n");
+  let allText = [];
+
+  let totalTiles =
+    cols * rows;
+
+  let currentTile = 0;
 
 
-  const lines =
-    text
-      .split("\n")
-      .map(
-        x => x.trim()
-      )
-      .filter(
-        x => x.length > 0
+  /*
+   * OCR של התמונה המלאה
+   *
+   * נותן לנו גם טקסט כללי.
+   */
+
+  setStatus(
+    "🔎 שלב 1/10 — סריקת התמונה המלאה..."
+  );
+
+
+  try {
+
+    const fullCanvas =
+      prepareCanvas(
+        bitmap,
+        1
       );
 
 
-  let found = [];
+    const fullText =
+      await runOCR(
+        fullCanvas
+      );
+
+
+    allText.push(
+      fullText
+    );
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Full OCR failed",
+      error
+    );
+
+  }
+
+
+  /*
+   * סריקת האזורים
+   */
+
+  for (
+    let row = 0;
+    row < rows;
+    row++
+  ) {
+
+    for (
+      let col = 0;
+      col < cols;
+      col++
+    ) {
+
+      currentTile++;
+
+
+      const progress =
+        Math.round(
+          (
+            currentTile /
+            totalTiles
+          ) * 100
+        );
+
+
+      setProgress(
+        progress
+      );
+
+
+      setStatus(
+        "🔎 סריקת אזור " +
+        currentTile +
+        " מתוך " +
+        totalTiles
+      );
+
+
+      const canvas =
+        createTileCanvas(
+          bitmap,
+          col,
+          row,
+          cols,
+          rows,
+          overlap
+        );
+
+
+      try {
+
+        const text =
+          await runOCR(
+            canvas
+          );
+
+
+        if (text) {
+
+          allText.push(
+            text
+          );
+
+        }
+
+      }
+
+      catch (error) {
+
+        console.warn(
+          "Tile OCR failed",
+          error
+        );
+
+      }
+
+    }
+
+  }
+
+
+  setProgress(100);
+
+
+  return {
+
+    rawText:
+      allText.join(
+        "\n\n================ TILE ================\n\n"
+      )
+
+  };
+
+}
+
+
+
+/************************************************
+ * יצירת אזור חיתוך
+ ************************************************/
+
+function createTileCanvas(
+  bitmap,
+  col,
+  row,
+  cols,
+  rows,
+  overlap
+) {
+
+  const tileWidth =
+    bitmap.width / cols;
+
+  const tileHeight =
+    bitmap.height / rows;
+
+
+  const x =
+    Math.max(
+      0,
+      Math.floor(
+        col * tileWidth -
+        tileWidth * overlap / 2
+      )
+    );
+
+
+  const y =
+    Math.max(
+      0,
+      Math.floor(
+        row * tileHeight -
+        tileHeight * overlap / 2
+      )
+    );
+
+
+  const right =
+    Math.min(
+      bitmap.width,
+      Math.ceil(
+        (col + 1) * tileWidth +
+        tileWidth * overlap / 2
+      )
+    );
+
+
+  const bottom =
+    Math.min(
+      bitmap.height,
+      Math.ceil(
+        (row + 1) * tileHeight +
+        tileHeight * overlap / 2
+      )
+    );
+
+
+  const width =
+    right - x;
+
+  const height =
+    bottom - y;
+
+
+  /*
+   * הגדלה פי 2
+   */
+
+  const scale = 2;
+
+
+  const canvas =
+    document.createElement(
+      "canvas"
+    );
+
+
+  canvas.width =
+    width * scale;
+
+  canvas.height =
+    height * scale;
+
+
+  const ctx =
+    canvas.getContext(
+      "2d"
+    );
+
+
+  /*
+   * רקע לבן
+   */
+
+  ctx.fillStyle =
+    "white";
+
+  ctx.fillRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  /*
+   * ציור והגדלה
+   */
+
+  ctx.drawImage(
+
+    bitmap,
+
+    x,
+    y,
+    width,
+    height,
+
+    0,
+    0,
+    canvas.width,
+    canvas.height
+
+  );
+
+
+  /*
+   * שיפור ניגודיות
+   */
+
+  enhanceCanvas(
+    canvas
+  );
+
+
+  return canvas;
+
+}
+
+
+
+/************************************************
+ * הכנת תמונה
+ ************************************************/
+
+function prepareCanvas(
+  bitmap,
+  scale
+) {
+
+  const canvas =
+    document.createElement(
+      "canvas"
+    );
+
+
+  canvas.width =
+    bitmap.width * scale;
+
+  canvas.height =
+    bitmap.height * scale;
+
+
+  const ctx =
+    canvas.getContext(
+      "2d"
+    );
+
+
+  ctx.drawImage(
+    bitmap,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  enhanceCanvas(
+    canvas
+  );
+
+
+  return canvas;
+
+}
+
+
+
+/************************************************
+ * שיפור תמונה
+ ************************************************/
+
+function enhanceCanvas(
+  canvas
+) {
+
+  const ctx =
+    canvas.getContext(
+      "2d"
+    );
+
+
+  const imageData =
+    ctx.getImageData(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+
+  const data =
+    imageData.data;
+
+
+  /*
+   * המרה לגווני אפור
+   *
+   * ושיפור ניגודיות.
+   */
+
+  for (
+    let i = 0;
+    i < data.length;
+    i += 4
+  ) {
+
+    const r =
+      data[i];
+
+    const g =
+      data[i + 1];
+
+    const b =
+      data[i + 2];
+
+
+    let gray =
+      0.299 * r +
+      0.587 * g +
+      0.114 * b;
+
+
+    /*
+     * ניגודיות
+     */
+
+    gray =
+      (
+        gray - 128
+      ) * 1.35 + 128;
+
+
+    gray =
+      Math.max(
+        0,
+        Math.min(
+          255,
+          gray
+        )
+      );
+
+
+    data[i] =
+      gray;
+
+    data[i + 1] =
+      gray;
+
+    data[i + 2] =
+      gray;
+
+  }
+
+
+  ctx.putImageData(
+    imageData,
+    0,
+    0
+  );
+
+}
+
+
+
+/************************************************
+ * OCR
+ ************************************************/
+
+async function runOCR(
+  canvas
+) {
+
+  const result =
+    await Tesseract.recognize(
+
+      canvas,
+
+      "eng",
+
+      {
+
+        logger:
+          function(message) {
+
+            if (
+              message.status ===
+              "recognizing text"
+            ) {
+
+              /*
+               * אין כאן שינוי
+               * של הפס הכללי.
+               */
+
+            }
+
+          }
+
+      }
+
+    );
+
+
+  return result.data.text || "";
+
+}
+
+
+
+/************************************************
+ * חילוץ מק"טים
+ ************************************************/
+
+function extractPartNumbers(
+  text
+) {
+
+  const found =
+    new Map();
+
+
+  /*
+   * כל השורות בנפרד
+   */
+
+  const lines =
+    text
+      .toUpperCase()
+      .split(/\r?\n/)
+      .map(
+        line => line.trim()
+      )
+      .filter(
+        line => line.length > 0
+      );
 
 
   for (
     let line of lines
   ) {
 
+    /*
+     * החלפת תווים מוזרים
+     */
 
-    let clean =
-      line
-        .replace(
-          /[^A-Z0-9 ._\/-]/g,
-          " "
-        );
+    let cleaned =
+      line.replace(
+        /[^A-Z0-9 ._\/-]/g,
+        " "
+      );
 
+
+    /*
+     * מועמדים רציפים.
+     *
+     * אנחנו לא דורשים שהמקט
+     * יהיה ללא רווחים כאן,
+     * כי לאחר מכן נסיר אותם.
+     */
 
     const matches =
-      clean.match(
+      cleaned.match(
         /[A-Z0-9][A-Z0-9 ._\/-]{2,}[A-Z0-9]/g
       );
 
@@ -816,42 +1263,17 @@ function extractPartNumbers(text) {
 
 
     for (
-      let candidate of matches
+      let raw of matches
     ) {
 
-
-      candidate =
-        candidate
-          .replace(
-            /\s+/g,
-            ""
-          );
-
-
-      candidate =
-        candidate
-          .replace(
-            /^[._\/-]+/,
-            ""
-          )
-          .replace(
-            /[._\/-]+$/,
-            ""
-          );
+      let candidate =
+        normalizeCandidate(
+          raw
+        );
 
 
       if (
-        candidate.length < 3 ||
-        candidate.length > 30
-      ) {
-
-        continue;
-
-      }
-
-
-      if (
-        !/[0-9]/.test(candidate)
+        !candidate
       ) {
 
         continue;
@@ -860,39 +1282,17 @@ function extractPartNumbers(text) {
 
 
       /*
-       * 3 אותיות רצופות ומעלה
-       * = פסילה
+       * בדיקת מק"ט
        */
 
-      if (
-        /[A-Z]{3,}/.test(candidate)
-      ) {
-
-        continue;
-
-      }
-
-
-      const banned = [
-
-        "FILTER",
-        "DIESEL",
-        "MADEIN",
-        "ORIGINAL",
-        "PARTS",
-        "MOPAR",
-        "PSA",
-        "GENUINE",
-        "CHINA",
-        "WARNING",
-        "MODEL",
-        "TYPE"
-
-      ];
+      const score =
+        scoreCandidate(
+          candidate
+        );
 
 
       if (
-        banned.includes(candidate)
+        score <= 0
       ) {
 
         continue;
@@ -901,67 +1301,28 @@ function extractPartNumbers(text) {
 
 
       /*
-       * Q1 / A1 וכדומה
-       * אינם מק"ט.
+       * שמירת המועמד הטוב ביותר
        */
 
       if (
-        /^[A-Z][0-9]$/.test(candidate)
+        !found.has(
+          candidate
+        ) ||
+        found.get(candidate).score < score
       ) {
 
-        continue;
-
-      }
-
-
-      let priority = 0;
-
-
-      /*
-       * 16 / 96 / 98
-       */
-
-      if (
-        /^(16|96|98)/.test(candidate)
-      ) {
-
-        priority = 100;
-
-      }
-
-      else if (
-        /^\d{5,}$/.test(candidate)
-      ) {
-
-        priority = 70;
-
-      }
-
-      else if (
-        /[A-Z]/.test(candidate) &&
-        /\d/.test(candidate)
-      ) {
-
-        priority = 50;
-
-      }
-
-      else {
-
-        priority = 20;
-
-      }
-
-
-      found.push({
-
-        value:
+        found.set(
           candidate,
+          {
+            value:
+              candidate,
 
-        priority:
-          priority
+            score:
+              score
+          }
+        );
 
-      });
+      }
 
     }
 
@@ -969,44 +1330,291 @@ function extractPartNumbers(text) {
 
 
   /*
-   * הסרת כפילויות
+   * החזרה לפי עדיפות
    */
 
-  const unique =
-    new Map();
-
-
-  for (
-    const item of found
-  ) {
-
-    if (
-      !unique.has(
-        item.value
-      )
-    ) {
-
-      unique.set(
-        item.value,
-        item
-      );
-
-    }
-
-  }
-
-
   return Array.from(
-    unique.values()
+    found.values()
   )
   .sort(
     function(a, b) {
 
-      return b.priority -
-             a.priority;
+      return b.score -
+             a.score;
 
     }
   );
+
+}
+
+
+
+/************************************************
+ * ניקוי מועמד
+ ************************************************/
+
+function normalizeCandidate(
+  value
+) {
+
+  if (!value) {
+
+    return "";
+
+  }
+
+
+  let candidate =
+    value
+      .toUpperCase()
+      .trim();
+
+
+  /*
+   * הסרת רווחים
+   */
+
+  candidate =
+    candidate.replace(
+      /\s+/g,
+      ""
+    );
+
+
+  /*
+   * תווים מותרים
+   */
+
+  candidate =
+    candidate.replace(
+      /[^A-Z0-9._\/-]/g,
+      ""
+    );
+
+
+  /*
+   * הסרת סימנים מההתחלה
+   */
+
+  candidate =
+    candidate.replace(
+      /^[._\/-]+/,
+      ""
+    );
+
+
+  /*
+   * הסרת סימנים מהסוף
+   */
+
+  candidate =
+    candidate.replace(
+      /[._\/-]+$/,
+      ""
+    );
+
+
+  return candidate;
+
+}
+
+
+
+/************************************************
+ * דירוג מועמד
+ ************************************************/
+
+function scoreCandidate(
+  candidate
+) {
+
+  /*
+   * קצר מדי
+   */
+
+  if (
+    candidate.length < 4
+  ) {
+
+    return 0;
+
+  }
+
+
+  /*
+   * ארוך מדי
+   */
+
+  if (
+    candidate.length > 30
+  ) {
+
+    return 0;
+
+  }
+
+
+  /*
+   * חייב להכיל מספר
+   */
+
+  if (
+    !/\d/.test(candidate)
+  ) {
+
+    return 0;
+
+  }
+
+
+  /*
+   * שלוש אותיות רצופות ומעלה
+   * = לא מק"ט מבחינתנו
+   */
+
+  if (
+    /[A-Z]{3,}/.test(
+      candidate
+    )
+  ) {
+
+    return 0;
+
+  }
+
+
+  /*
+   * מילים ידועות שאינן מק"ט
+   */
+
+  const banned = [
+
+    "FILTER",
+    "DIESEL",
+    "ENGINE",
+    "ORIGINAL",
+    "PARTS",
+    "GENUINE",
+    "RENAULT",
+    "NISSAN",
+    "MOPAR",
+    "PSA",
+    "GROUP",
+    "MADEIN",
+    "CHINA",
+    "WARNING",
+    "MODEL",
+    "TYPE",
+    "AUTHENTICATION"
+
+  ];
+
+
+  if (
+    banned.includes(
+      candidate
+    )
+  ) {
+
+    return 0;
+
+  }
+
+
+  /*
+   * Q1 / Q2 / A1 וכו'
+   */
+
+  if (
+    /^[A-Z]\d$/.test(
+      candidate
+    )
+  ) {
+
+    return 0;
+
+  }
+
+
+  /*
+   * ניקוד
+   */
+
+  let score = 20;
+
+
+  /*
+   * מק"ט שמתחיל
+   * ב-16 / 96 / 98
+   */
+
+  if (
+    /^(16|96|98)/.test(
+      candidate
+    )
+  ) {
+
+    score += 100;
+
+  }
+
+
+  /*
+   * מספר ארוך
+   */
+
+  if (
+    /^\d{7,15}$/.test(
+      candidate
+    )
+  ) {
+
+    score += 50;
+
+  }
+
+
+  /*
+   * מספר + אותיות
+   */
+
+  if (
+    /[A-Z]/.test(candidate) &&
+    /\d/.test(candidate)
+  ) {
+
+    score += 35;
+
+  }
+
+
+  /*
+   * 1-2 אותיות מותרות
+   */
+
+  if (
+    /[A-Z]{1,2}/.test(candidate)
+  ) {
+
+    score += 10;
+
+  }
+
+
+  /*
+   * מק"ט ארוך וסביר
+   */
+
+  if (
+    candidate.length >= 7
+  ) {
+
+    score += 10;
+
+  }
+
+
+  return score;
 
 }
 
@@ -1019,7 +1627,6 @@ function extractPartNumbers(text) {
 function displayResults(
   results
 ) {
-
 
   const container =
     document.getElementById(
@@ -1036,8 +1643,8 @@ function displayResults(
   ) {
 
     setStatus(
-      "⚠️ לא נמצאו מק\"טים מתאימים",
-      "warning"
+      "⚠️ לא נמצאו מק\"טים מתאימים.<br>" +
+      "בדוק את טקסט ה-OCR הגולמי למטה."
     );
 
     return;
@@ -1048,7 +1655,7 @@ function displayResults(
   setStatus(
     "✅ נמצאו " +
     results.length +
-    " מועמדים. בחר מה נכון."
+    " מועמדים — בחר מה נכון."
   );
 
 
@@ -1076,8 +1683,13 @@ function displayResults(
         "checkbox";
 
 
+      /*
+       * מק"טים 16/96/98
+       * מסומנים אוטומטית.
+       */
+
       checkbox.checked =
-        item.priority >= 50;
+        item.score >= 100;
 
 
       checkbox.dataset.index =
@@ -1113,11 +1725,20 @@ function displayResults(
 
 
       if (
-        item.priority === 100
+        item.score >= 100
       ) {
 
         priority.textContent =
-          "עדיפות גבוהה";
+          "⭐ עדיפות גבוהה";
+
+      }
+
+      else if (
+        item.score >= 70
+      ) {
+
+        priority.textContent =
+          "✓ מועמד חזק";
 
       }
 
@@ -1206,6 +1827,44 @@ function displayResults(
 
 
 /************************************************
+ * הצגת OCR גולמי
+ ************************************************/
+
+function showRawText(
+  text
+) {
+
+  const title =
+    document.getElementById(
+      "rawTitle"
+    );
+
+  const box =
+    document.getElementById(
+      "rawText"
+    );
+
+
+  title.classList
+    .remove(
+      "hidden"
+    );
+
+
+  box.classList
+    .remove(
+      "hidden"
+    );
+
+
+  box.textContent =
+    text || "(לא התקבל טקסט)";
+
+}
+
+
+
+/************************************************
  * בחירת הכול
  ************************************************/
 
@@ -1283,7 +1942,7 @@ function updateSummary() {
 
 
 /************************************************
- * שליחת המק"טים ל-Google Sheets
+ * שליחה ל-Google Sheets
  ************************************************/
 
 async function confirmSelection() {
@@ -1322,29 +1981,19 @@ async function confirmSelection() {
   }
 
 
-  /*
-   * מניעת שליחה אם הכתובת
-   * עדיין לא הוגדרה
-   */
-
   if (
     APPS_SCRIPT_URL ===
     'PASTE_YOUR_APPS_SCRIPT_URL_HERE'
   ) {
 
     setStatus(
-      "❌ עדיין לא הוגדרה כתובת Google Apps Script",
-      "error"
+      "❌ כתובת Google Apps Script לא הוגדרה"
     );
 
     return;
 
   }
 
-
-  /*
-   * השבתת הכפתור בזמן השליחה
-   */
 
   const button =
     document.getElementById(
@@ -1357,7 +2006,7 @@ async function confirmSelection() {
 
 
   button.textContent =
-    "⏳ מוסיף...";
+    "⏳ מוסיף למלאי...";
 
 
   setStatus(
@@ -1367,20 +2016,15 @@ async function confirmSelection() {
 
   try {
 
-
-    /*
-     * text/plain חשוב כאן:
-     * הוא מונע בקשת preflight
-     * מיותרת מול Google Apps Script.
-     */
-
     await fetch(
       APPS_SCRIPT_URL,
       {
 
-        method: "POST",
+        method:
+          "POST",
 
-        mode: "no-cors",
+        mode:
+          "no-cors",
 
         headers: {
 
@@ -1401,19 +2045,12 @@ async function confirmSelection() {
     );
 
 
-    /*
-     * אין alert.
-     *
-     * מחזירים את המשתמש
-     * למסך הסריקה.
-     */
-
     clearResults();
 
 
     setStatus(
-      "✅ המלאי עודכן<br>מוכן לסריקה הבאה",
-      "success"
+      "✅ המלאי עודכן<br>" +
+      "מוכן לסריקה הבאה"
     );
 
 
@@ -1427,8 +2064,8 @@ async function confirmSelection() {
 
 
     setStatus(
-      "❌ לא ניתן לשלוח את הנתונים ל-Google Sheets",
-      "error"
+      "❌ שגיאה בשליחה ל-Google Sheets<br>" +
+      error.message
     );
 
   }
@@ -1514,6 +2151,26 @@ function clearResults() {
 
   document
     .getElementById(
+      "rawTitle"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "rawText"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
       "progressContainer"
     )
     .classList
@@ -1538,7 +2195,6 @@ function clearResults() {
  ************************************************/
 
 function stopCamera() {
-
 
   if (stream) {
 
@@ -1605,30 +2261,39 @@ function stopCamera() {
  ************************************************/
 
 function setStatus(
-  text,
-  type = ""
+  text
 ) {
 
-
-  const status =
-    document.getElementById(
+  document
+    .getElementById(
       "status"
-    );
-
-
-  status.innerHTML =
-    text;
-
-
-  status.className =
-    "status " +
-    type;
+    )
+    .innerHTML =
+      text;
 
 }
 
 
-</script>
 
+/************************************************
+ * פס התקדמות
+ ************************************************/
+
+function setProgress(
+  value
+) {
+
+  document
+    .getElementById(
+      "progressBar"
+    )
+    .style
+    .width =
+      value + "%";
+
+}
+
+</script>
 
 </body>
 
