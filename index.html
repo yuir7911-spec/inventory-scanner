@@ -3,354 +3,298 @@
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-  <title>מערכת סריקת מק"טים</title>
+<title>מערכת OCR למק"טים</title>
 
+<!-- Tesseract OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-  <!-- ZXing - מנוע קריאת ברקודים -->
-  <script src="https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js"></script>
 
+<style>
 
-  <style>
+* {
+  box-sizing: border-box;
+}
 
-    * {
-      box-sizing: border-box;
-    }
+body {
 
+  margin: 0;
 
-    body {
+  padding: 15px;
 
-      margin: 0;
+  background: #f3f5f7;
 
-      padding: 20px;
+  font-family: Arial, sans-serif;
 
-      background: #f4f6f8;
+  color: #222;
 
-      font-family: Arial, sans-serif;
+}
 
-      color: #222;
+.container {
 
-    }
+  max-width: 650px;
 
+  margin: auto;
 
-    .container {
+}
 
-      width: 100%;
+h1 {
 
-      max-width: 600px;
+  text-align: center;
 
-      margin: auto;
+  margin-bottom: 5px;
 
-    }
+}
 
+.subtitle {
 
-    h1 {
+  text-align: center;
 
-      text-align: center;
+  color: #666;
 
-      margin-bottom: 10px;
+  margin-bottom: 20px;
 
-    }
+}
 
+button {
 
-    .subtitle {
+  width: 100%;
 
-      text-align: center;
+  border: none;
 
-      color: #666;
+  border-radius: 10px;
 
-      margin-bottom: 20px;
+  padding: 16px;
 
-    }
+  margin-top: 10px;
 
+  font-size: 18px;
 
-    .camera-box {
+  font-weight: bold;
 
-      position: relative;
+}
 
-      width: 100%;
+.primary {
 
-      background: #000;
+  background: #1a73e8;
 
-      border-radius: 15px;
+  color: white;
 
-      overflow: hidden;
+}
 
-    }
+.success {
 
+  background: #188038;
 
-    #video {
+  color: white;
 
-      display: block;
+}
 
-      width: 100%;
+.danger {
 
-      height: auto;
+  background: #d93025;
 
-      min-height: 350px;
+  color: white;
 
-      max-height: 70vh;
+}
 
-      object-fit: cover;
+.gray {
 
-    }
+  background: #e8eaed;
 
+  color: #222;
 
-    /*
-     * מסגרת הסריקה
-     */
+}
 
-    .scan-frame {
+.camera {
 
-      position: absolute;
+  position: relative;
 
-      top: 50%;
+  background: black;
 
-      left: 8%;
+  border-radius: 15px;
 
-      width: 84%;
+  overflow: hidden;
 
-      height: 110px;
+}
 
-      transform: translateY(-50%);
+video {
 
-      border: 3px solid white;
+  width: 100%;
 
-      border-radius: 12px;
+  display: block;
 
-      pointer-events: none;
+}
 
-      box-shadow:
-        0 0 0 9999px
-        rgba(0,0,0,0.25);
+canvas {
 
-    }
+  display: none;
 
+}
 
-    .scan-line {
+.status {
 
-      position: absolute;
+  background: white;
 
-      left: 10%;
+  padding: 15px;
 
-      width: 80%;
+  margin-top: 15px;
 
-      top: 50%;
+  border-radius: 10px;
 
-      height: 2px;
+  text-align: center;
 
-      background: red;
+  line-height: 1.6;
 
-      animation: scan 1.8s infinite;
+}
 
-    }
+.progress {
 
+  width: 100%;
 
-    @keyframes scan {
+  height: 12px;
 
-      0% {
-        transform: translateY(-45px);
-      }
+  background: #ddd;
 
-      50% {
-        transform: translateY(45px);
-      }
+  border-radius: 10px;
 
-      100% {
-        transform: translateY(-45px);
-      }
+  overflow: hidden;
 
-    }
+  margin-top: 10px;
 
+}
 
-    button {
+.progress-bar {
 
-      width: 100%;
+  width: 0%;
 
-      padding: 16px;
+  height: 100%;
 
-      margin-top: 12px;
+  background: #1a73e8;
 
-      border: none;
+  transition: width .2s;
 
-      border-radius: 10px;
+}
 
-      font-size: 18px;
+.results {
 
-      font-weight: bold;
+  margin-top: 20px;
 
-      cursor: pointer;
+}
 
-    }
+.result-item {
 
+  background: white;
 
-    button:disabled {
+  padding: 15px;
 
-      opacity: 0.5;
+  margin-top: 10px;
 
-      cursor: default;
+  border-radius: 10px;
 
-    }
+  display: flex;
 
+  align-items: center;
 
-    .primary {
+  gap: 12px;
 
-      background: #1a73e8;
+  direction: rtl;
 
-      color: white;
+}
 
-    }
+.result-item input {
 
+  width: 25px;
 
-    .success-button {
+  height: 25px;
 
-      background: #188038;
+}
 
-      color: white;
+.part {
 
-    }
+  direction: ltr;
 
+  text-align: left;
 
-    .danger {
+  font-size: 21px;
 
-      background: #d93025;
+  font-weight: bold;
 
-      color: white;
+  flex: 1;
 
-    }
+}
 
+.priority {
 
-    .secondary {
+  font-size: 12px;
 
-      background: #e8eaed;
+  color: #188038;
 
-      color: #222;
+}
 
-    }
+.preview {
 
+  width: 100%;
 
-    .status {
+  margin-top: 15px;
 
-      margin-top: 15px;
+  border-radius: 10px;
 
-      padding: 15px;
+  display: none;
 
-      border-radius: 10px;
+}
 
-      background: white;
+.hidden {
 
-      text-align: center;
+  display: none !important;
 
-      line-height: 1.6;
+}
 
-    }
+.file-label {
 
+  display: block;
 
-    .success {
+  width: 100%;
 
-      background: #e6f4ea;
+  padding: 16px;
 
-      color: #137333;
+  margin-top: 10px;
 
-    }
+  background: #5f6368;
 
+  color: white;
 
-    .error {
+  border-radius: 10px;
 
-      background: #fce8e6;
+  text-align: center;
 
-      color: #c5221f;
+  font-size: 18px;
 
-    }
+  font-weight: bold;
 
+}
 
-    .warning {
+.summary {
 
-      background: #fef7e0;
+  background: white;
 
-      color: #8a4b00;
+  padding: 15px;
 
-    }
+  border-radius: 10px;
 
+  margin-top: 15px;
 
-    .result {
+  text-align: center;
 
-      display: none;
+}
 
-      margin-top: 15px;
-
-      padding: 20px;
-
-      background: white;
-
-      border-radius: 12px;
-
-      box-shadow:
-        0 2px 8px
-        rgba(0,0,0,0.1);
-
-      text-align: center;
-
-    }
-
-
-    .part-number {
-
-      direction: ltr;
-
-      text-align: center;
-
-      font-size: 30px;
-
-      font-weight: bold;
-
-      letter-spacing: 1px;
-
-      margin: 15px 0;
-
-      word-break: break-all;
-
-    }
-
-
-    .barcode-format {
-
-      color: #666;
-
-      font-size: 14px;
-
-    }
-
-
-    .info {
-
-      margin-top: 20px;
-
-      background: white;
-
-      padding: 15px;
-
-      border-radius: 12px;
-
-      line-height: 1.7;
-
-    }
-
-
-    .hidden {
-
-      display: none !important;
-
-    }
-
-
-  </style>
+</style>
 
 </head>
 
@@ -361,152 +305,154 @@
 <div class="container">
 
 
-  <h1>
-    📦 מערכת סריקת מק"טים
-  </h1>
+<h1>📦 מערכת OCR למק"טים</h1>
+
+<div class="subtitle">
+צילום מדף וזיהוי רצפי מספרים ואותיות
+</div>
 
 
-  <div class="subtitle">
-    סריקה ידנית של ברקוד
-  </div>
+<!-- מצלמה -->
+
+<div class="camera">
+
+<video
+  id="video"
+  autoplay
+  playsinline
+  muted
+></video>
+
+</div>
 
 
-  <!-- מצלמה -->
-
-  <div class="camera-box">
-
-    <video
-      id="video"
-      autoplay
-      muted
-      playsinline
-    ></video>
+<button
+  id="startCamera"
+  class="primary"
+  onclick="startCamera()"
+>
+📷 הפעל מצלמה
+</button>
 
 
-    <div class="scan-frame"></div>
-
-    <div class="scan-line"></div>
-
-  </div>
-
-
-  <!-- הפעל מצלמה -->
-
-  <button
-    id="startButton"
-    class="primary"
-    onclick="startScanner()"
-  >
-
-    📷 הפעל מצלמה
-
-  </button>
+<button
+  id="takePhoto"
+  class="success hidden"
+  onclick="takePhoto()"
+>
+📸 צלם תמונה
+</button>
 
 
-  <!-- עצור -->
-
-  <button
-    id="stopButton"
-    class="danger hidden"
-    onclick="stopScanner()"
-  >
-
-    ⏹ עצור מצלמה
-
-  </button>
+<button
+  id="stopCamera"
+  class="danger hidden"
+  onclick="stopCamera()"
+>
+⏹ עצור מצלמה
+</button>
 
 
-  <!-- מצב -->
-
-  <div
-    id="status"
-    class="status"
-  >
-
-    לחץ על "הפעל מצלמה"
-
-  </div>
+<canvas id="canvas"></canvas>
 
 
-  <!-- תוצאה -->
+<!-- העלאת תמונה -->
 
-  <div
-    id="resultBox"
-    class="result"
-  >
+<label
+  class="file-label"
+  for="imageInput"
+>
+🖼️ בחר תמונה מהטלפון
+</label>
 
-    <div>
-      ✅ ברקוד זוהה
-    </div>
-
-
-    <div
-      id="partNumber"
-      class="part-number"
-    ></div>
-
-
-    <div
-      id="barcodeFormat"
-      class="barcode-format"
-    ></div>
+<input
+  id="imageInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+  class="hidden"
+  onchange="imageSelected(event)"
+>
 
 
-    <button
-      id="addButton"
-      class="success-button"
-      onclick="addBarcode()"
-    >
-
-      ✅ הוסף מק"ט
-
-    </button>
+<img
+  id="preview"
+  class="preview"
+>
 
 
-    <button
-      class="secondary"
-      onclick="skipBarcode()"
-    >
+<!-- סטטוס -->
 
-      ❌ דלג
-
-    </button>
-
-  </div>
+<div
+  id="status"
+  class="status"
+>
+בחר צילום או תמונה מהטלפון
+</div>
 
 
-  <div class="info">
+<!-- התקדמות -->
 
-    <strong>איך להשתמש?</strong>
+<div
+  id="progressContainer"
+  class="hidden"
+>
 
-    <br>
+<div class="progress">
 
-    1. לחץ על 📷 הפעל מצלמה.
+<div
+  id="progressBar"
+  class="progress-bar"
+></div>
 
-    <br>
+</div>
 
-    2. כוון את הברקוד לתוך המסגרת.
+</div>
 
-    <br>
 
-    3. המתן לזיהוי.
+<!-- תוצאות -->
 
-    <br>
+<div
+  id="results"
+  class="results"
+>
+</div>
 
-    4. בדוק את המק"ט.
 
-    <br>
+<!-- סיכום -->
 
-    5. לחץ ✅ הוסף מק"ט או ❌ דלג.
+<div
+  id="summary"
+  class="summary hidden"
+>
+</div>
 
-    <br><br>
 
-    <strong>הערה:</strong>
-    בשלב הזה אנחנו בודקים ברקוד אחד.
-    לאחר שהזיהוי יעבוד, נחבר את Google Sheets
-    ונוסיף סריקה של מספר ברקודים מתוך תמונה.
+<button
+  id="selectAll"
+  class="gray hidden"
+  onclick="selectAll()"
+>
+☑ בחר הכול
+</button>
 
-  </div>
+
+<button
+  id="clearAll"
+  class="gray hidden"
+  onclick="clearAll()"
+>
+☐ בטל הכול
+</button>
+
+
+<button
+  id="confirm"
+  class="success hidden"
+  onclick="confirmSelection()"
+>
+✅ הוסף את המק"טים שנבחרו
+</button>
 
 
 </div>
@@ -516,61 +462,23 @@
 <script>
 
 
-/*******************************************************
- * הגדרות
- *******************************************************/
+/************************************************
+ * משתנים
+ ************************************************/
 
+let stream = null;
 
-let codeReader = null;
-
-let currentBarcode = '';
-
-let scanning = false;
-
-
-/*
- * מניעת זיהוי חוזר מיידי
- */
-
-let lastDetected = '';
-
-let lastDetectedTime = 0;
-
-
-/*
- * זמן המתנה לפני שמאפשרים
- * לזהות שוב את אותו ברקוד
- */
-
-const SAME_BARCODE_DELAY = 2500;
+let candidates = [];
 
 
 
-/*******************************************************
- * הפעלת הסורק
- *******************************************************/
+/************************************************
+ * הפעלת מצלמה
+ ************************************************/
 
-async function startScanner() {
-
-
-  const video =
-    document.getElementById(
-      'video'
-    );
-
-
-  const status =
-    document.getElementById(
-      'status'
-    );
-
+async function startCamera() {
 
   try {
-
-
-    /*
-     * בדיקת תמיכה
-     */
 
     if (
       !navigator.mediaDevices ||
@@ -578,621 +486,1107 @@ async function startScanner() {
     ) {
 
       throw new Error(
-        'הדפדפן אינו מאפשר גישה למצלמה'
+        "הדפדפן אינו תומך במצלמה"
       );
 
     }
 
 
-    /*
-     * יצירת ZXing
-     */
-
-    codeReader =
-      new ZXing.BrowserMultiFormatReader();
-
-
-    scanning = true;
-
-
-    /*
-     * הסתרת תוצאת קוד קודם
-     */
-
-    hideResult();
-
-
-    /*
-     * הפעלת המצלמה
-     */
-
-    await codeReader.decodeFromConstraints(
-
-      {
+    stream =
+      await navigator.mediaDevices.getUserMedia({
 
         video: {
 
           facingMode: {
-            ideal: 'environment'
+            ideal: "environment"
           },
 
           width: {
-            ideal: 1280
+            ideal: 1920
           },
 
           height: {
-            ideal: 720
+            ideal: 1080
           }
 
         },
 
         audio: false
 
-      },
-
-      video,
-
-      function(
-        result,
-        error
-      ) {
+      });
 
 
-        /*
-         * אם לא נמצא ברקוד,
-         * ZXing מחזיר שגיאה זמנית.
-         *
-         * זה תקין ולכן לא מציגים אותה.
-         */
+    const video =
+      document.getElementById("video");
 
-        if (result) {
 
-          handleBarcode(
-            result
-          );
+    video.srcObject =
+      stream;
+
+
+    document
+      .getElementById("startCamera")
+      .classList.add("hidden");
+
+
+    document
+      .getElementById("takePhoto")
+      .classList.remove("hidden");
+
+
+    document
+      .getElementById("stopCamera")
+      .classList.remove("hidden");
+
+
+    setStatus(
+      "📷 המצלמה פעילה<br>כוון את המצלמה אל המדף"
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    setStatus(
+      "❌ לא ניתן לפתוח את המצלמה<br>" +
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+
+/************************************************
+ * צילום תמונה
+ ************************************************/
+
+function takePhoto() {
+
+  const video =
+    document.getElementById("video");
+
+  const canvas =
+    document.getElementById("canvas");
+
+
+  if (
+    !video.videoWidth ||
+    !video.videoHeight
+  ) {
+
+    setStatus(
+      "❌ המצלמה עדיין לא מוכנה"
+    );
+
+    return;
+
+  }
+
+
+  canvas.width =
+    video.videoWidth;
+
+  canvas.height =
+    video.videoHeight;
+
+
+  const ctx =
+    canvas.getContext("2d");
+
+
+  ctx.drawImage(
+    video,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  canvas.toBlob(
+    function(blob) {
+
+      processImage(blob);
+
+    },
+    "image/jpeg",
+    0.95
+  );
+
+}
+
+
+
+/************************************************
+ * תמונה מהטלפון
+ ************************************************/
+
+function imageSelected(event) {
+
+  const file =
+    event.target.files[0];
+
+
+  if (!file) {
+
+    return;
+
+  }
+
+
+  processImage(file);
+
+}
+
+
+
+/************************************************
+ * OCR
+ ************************************************/
+
+async function processImage(image) {
+
+  try {
+
+    clearResults();
+
+
+    setStatus(
+      "🔎 מתחיל עיבוד התמונה..."
+    );
+
+
+    document
+      .getElementById("progressContainer")
+      .classList.remove("hidden");
+
+
+    const preview =
+      document.getElementById("preview");
+
+
+    preview.src =
+      URL.createObjectURL(image);
+
+
+    preview.style.display =
+      "block";
+
+
+    /*
+     * Tesseract OCR
+     *
+     * eng בלבד מכיוון שאנחנו מחפשים
+     * מספרים ואותיות באנגלית.
+     */
+
+    const result =
+      await Tesseract.recognize(
+
+        image,
+
+        "eng",
+
+        {
+
+          logger:
+            function(message) {
+
+              if (
+                message.status ===
+                "recognizing text"
+              ) {
+
+                const percent =
+                  Math.round(
+                    message.progress * 100
+                  );
+
+                document
+                  .getElementById(
+                    "progressBar"
+                  )
+                  .style.width =
+                    percent + "%";
+
+
+                setStatus(
+                  "🔎 קורא את התמונה... " +
+                  percent +
+                  "%"
+                );
+
+              }
+
+            }
 
         }
 
-      }
+      );
 
+
+    const text =
+      result.data.text;
+
+
+    console.log(
+      "OCR RESULT:",
+      text
     );
 
 
     /*
-     * ממשק
+     * חילוץ מועמדים
      */
 
-    document
-      .getElementById(
-        'startButton'
-      )
-      .classList.add(
-        'hidden'
-      );
+    candidates =
+      extractPartNumbers(text);
 
 
-    document
-      .getElementById(
-        'stopButton'
-      )
-      .classList.remove(
-        'hidden'
-      );
-
-
-    status.className =
-      'status success';
-
-
-    status.innerHTML =
-      '📷 המצלמה פעילה<br>' +
-      'כוון את הברקוד לתוך המסגרת';
+    displayResults(
+      candidates
+    );
 
 
   }
 
   catch (error) {
 
+    console.error(error);
 
-    console.error(
-      error
+    setStatus(
+      "❌ אירעה שגיאה בקריאת התמונה<br>" +
+      error.message,
+      "error"
     );
 
+  }
 
-    scanning = false;
-
-
-    status.className =
-      'status error';
+}
 
 
-    status.innerHTML =
 
-      '❌ לא ניתן להפעיל את הסורק.<br><br>' +
+/************************************************
+ * חילוץ מק"טים
+ ************************************************/
 
-      escapeHtml(
-        error.message ||
-        String(error)
+function extractPartNumbers(text) {
+
+
+  /*
+   * איחוד שורות
+   */
+
+  text =
+    text
+      .toUpperCase()
+      .replace(/\r/g, "\n");
+
+
+  const lines =
+    text
+      .split("\n")
+      .map(
+        x => x.trim()
+      )
+      .filter(
+        x => x.length > 0
       );
 
+
+  let found = [];
+
+
+  /*
+   * כל שורה נבדקת
+   */
+
+  for (
+    let line of lines
+  ) {
+
+
+    /*
+     * הסרת תווים בעייתיים
+     */
+
+    let clean =
+      line
+        .replace(
+          /[^A-Z0-9 ._\/-]/g,
+          " "
+        );
+
+
+    /*
+     * מציאת רצפים אפשריים.
+     *
+     * לדוגמה:
+     *
+     * 16 742 109 80
+     *
+     * 1614111980
+     *
+     * 7LPB43
+     */
+
+    const matches =
+      clean.match(
+        /[A-Z0-9][A-Z0-9 ._\/-]{2,}[A-Z0-9]/g
+      );
+
+
+    if (!matches) {
+
+      continue;
+
+    }
+
+
+    for (
+      let candidate of matches
+    ) {
+
+
+      /*
+       * ניקוי רווחים
+       */
+
+      candidate =
+        candidate
+          .replace(
+            /\s+/g,
+            ""
+          );
+
+
+      /*
+       * ניקוי סימנים בתחילת/סוף
+       */
+
+      candidate =
+        candidate
+          .replace(
+            /^[._\/-]+/,
+            ""
+          )
+          .replace(
+            /[._\/-]+$/,
+            ""
+          );
+
+
+      /*
+       * אורך סביר
+       */
+
+      if (
+        candidate.length < 3 ||
+        candidate.length > 30
+      ) {
+
+        continue;
+
+      }
+
+
+      /*
+       * חייב להכיל לפחות ספרה אחת
+       */
+
+      if (
+        !/[0-9]/.test(candidate)
+      ) {
+
+        continue;
+
+      }
+
+
+      /*
+       * 3 אותיות רצופות ומעלה = פסילה
+       */
+
+      if (
+        /[A-Z]{3,}/.test(candidate)
+      ) {
+
+        continue;
+
+      }
+
+
+      /*
+       * מילות טקסט נפוצות
+       */
+
+      const banned = [
+
+        "FILTER",
+        "DIESEL",
+        "MADEIN",
+        "ORIGINAL",
+        "PARTS",
+        "MOPAR",
+        "PSA",
+        "GENUINE",
+        "CHINA",
+        "WARNING",
+        "MODEL",
+        "TYPE"
+
+      ];
+
+
+      if (
+        banned.includes(candidate)
+      ) {
+
+        continue;
+
+      }
+
+
+      /*
+       * Q1 וכדומה:
+       *
+       * אות + מספר אחד בלבד
+       *
+       * לא נחשב מק"ט.
+       */
+
+      if (
+        /^[A-Z][0-9]$/.test(candidate)
+      ) {
+
+        continue;
+
+      }
+
+
+      /*
+       * ניקוד עדיפות
+       */
+
+      let priority = 0;
+
+
+      /*
+       * מק"טים שמתחילים
+       * ב-16 / 96 / 98
+       */
+
+      if (
+        /^(16|96|98)/.test(candidate)
+      ) {
+
+        priority = 100;
+
+      }
+
+
+      /*
+       * מק"ט מספרי ארוך
+       */
+
+      else if (
+        /^\d{5,}$/.test(candidate)
+      ) {
+
+        priority = 70;
+
+      }
+
+
+      /*
+       * מק"ט אלפאנומרי
+       */
+
+      else if (
+        /[A-Z]/.test(candidate) &&
+        /\d/.test(candidate)
+      ) {
+
+        priority = 50;
+
+      }
+
+
+      /*
+       * מספר קצר יותר
+       */
+
+      else {
+
+        priority = 20;
+
+      }
+
+
+      found.push({
+
+        value:
+          candidate,
+
+        priority:
+          priority
+
+      });
+
+    }
+
   }
+
+
+  /*
+   * הסרת כפילויות
+   */
+
+  const unique =
+    new Map();
+
+
+  for (
+    const item of found
+  ) {
+
+    if (
+      !unique.has(
+        item.value
+      )
+    ) {
+
+      unique.set(
+        item.value,
+        item
+      );
+
+    }
+
+  }
+
+
+  /*
+   * מיון:
+   *
+   * קודם 16/96/98
+   */
+
+  return Array.from(
+    unique.values()
+  )
+  .sort(
+    function(a, b) {
+
+      return b.priority -
+             a.priority;
+
+    }
+  );
 
 }
 
 
 
-/*******************************************************
- * טיפול בברקוד שזוהה
- *******************************************************/
+/************************************************
+ * הצגת התוצאות
+ ************************************************/
 
-function handleBarcode(
-  result
+function displayResults(
+  results
 ) {
 
 
-  if (!scanning) {
-
-    return;
-
-  }
-
-
-  /*
-   * קבלת הטקסט
-   */
-
-  let value =
-    result.getText();
-
-
-  /*
-   * ניקוי המק"ט
-   */
-
-  value =
-    cleanPartNumber(
-      value
+  const container =
+    document.getElementById(
+      "results"
     );
 
 
-  /*
-   * אם אין ערך
-   */
-
-  if (!value) {
-
-    return;
-
-  }
-
-
-  /*
-   * מניעת זיהוי חוזר
-   */
-
-  const now =
-    Date.now();
+  container.innerHTML =
+    "";
 
 
   if (
-
-    value === lastDetected &&
-
-    now - lastDetectedTime <
-      SAME_BARCODE_DELAY
-
+    results.length === 0
   ) {
+
+    setStatus(
+      "⚠️ לא נמצאו מק\"טים מתאימים",
+      "warning"
+    );
 
     return;
 
   }
 
 
-  lastDetected =
-    value;
-
-
-  lastDetectedTime =
-    now;
-
-
-  /*
-   * שמירת התוצאה
-   */
-
-  currentBarcode =
-    value;
-
-
-  /*
-   * הצגת התוצאה
-   */
-
-  document
-    .getElementById(
-      'partNumber'
-    )
-    .textContent =
-      value;
-
-
-  /*
-   * סוג הברקוד
-   */
-
-  let format = '';
-
-
-  try {
-
-    format =
-      result
-        .getBarcodeFormat()
-        .toString();
-
-  }
-
-  catch (e) {
-
-    format =
-      'ברקוד';
-
-  }
-
-
-  document
-    .getElementById(
-      'barcodeFormat'
-    )
-    .textContent =
-      'סוג: ' +
-      format;
-
-
-  /*
-   * הצגת תוצאה
-   */
-
-  document
-    .getElementById(
-      'resultBox'
-    )
-    .style.display =
-      'block';
-
-
-  document
-    .getElementById(
-      'status'
-    )
-    .className =
-      'status success';
-
-
-  document
-    .getElementById(
-      'status'
-    )
-    .innerHTML =
-      '✅ ברקוד זוהה בהצלחה';
-
-
-}
-
-
-
-/*******************************************************
- * ניקוי מק"ט
- *******************************************************/
-
-function cleanPartNumber(
-  value
-) {
-
-
-  if (
-    value === null ||
-    value === undefined
-  ) {
-
-    return '';
-
-  }
-
-
-  let result =
-    String(value)
-      .trim()
-      .toUpperCase();
-
-
-  /*
-   * הסרת רווחים
-   *
-   * לדוגמה:
-   *
-   * 16 141 119 80
-   *
-   * ↓
-   *
-   * 1614111980
-   */
-
-  result =
-    result.replace(
-      /\s+/g,
-      ''
-    );
-
-
-  /*
-   * השארת:
-   *
-   * A-Z
-   * 0-9
-   * -
-   * _
-   * .
-   * /
-   */
-
-  result =
-    result.replace(
-      /[^A-Z0-9._\/-]/g,
-      ''
-    );
-
-
-  return result;
-
-}
-
-
-
-/*******************************************************
- * הוספת המק"ט
- *******************************************************/
-
-function addBarcode() {
-
-
-  if (!currentBarcode) {
-
-    return;
-
-  }
-
-
-  /*
-   * בשלב הנוכחי אנחנו רק בודקים
-   * שהזיהוי עובד.
-   *
-   * עדיין לא שולחים ל-Google Sheets.
-   */
-
-  alert(
-
-    'המק"ט שאושר:\n\n' +
-
-    currentBarcode
-
+  setStatus(
+    "✅ נמצאו " +
+    results.length +
+    " מועמדים. בחר מה נכון."
   );
 
 
-  /*
-   * לאחר האישור
-   * מאפשרים סריקה נוספת.
-   */
-
-  hideResult();
+  results.forEach(
+    function(item, index) {
 
 
-  currentBarcode =
-    '';
+      const row =
+        document.createElement(
+          "div"
+        );
 
 
-  document
-    .getElementById(
-      'status'
-    )
-    .className =
-      'status success';
+      row.className =
+        "result-item";
 
 
-  document
-    .getElementById(
-      'status'
-    )
-    .innerHTML =
-      'מוכן לסריקה הבאה';
-
-}
+      const checkbox =
+        document.createElement(
+          "input"
+        );
 
 
-
-/*******************************************************
- * דילוג על מק"ט
- *******************************************************/
-
-function skipBarcode() {
+      checkbox.type =
+        "checkbox";
 
 
-  currentBarcode =
-    '';
+      checkbox.checked =
+        item.priority >= 50;
 
 
-  hideResult();
+      checkbox.dataset.index =
+        index;
 
 
-  document
-    .getElementById(
-      'status'
-    )
-    .className =
-      'status warning';
+      const text =
+        document.createElement(
+          "div"
+        );
 
 
-  document
-    .getElementById(
-      'status'
-    )
-    .innerHTML =
-      'המק"ט נדחה — מוכן לסריקה הבאה';
-
-}
+      text.className =
+        "part";
 
 
-
-/*******************************************************
- * הסתרת תוצאה
- *******************************************************/
-
-function hideResult() {
+      text.textContent =
+        item.value;
 
 
-  document
-    .getElementById(
-      'resultBox'
-    )
-    .style.display =
-      'none';
-
-}
+      const priority =
+        document.createElement(
+          "div"
+        );
 
 
-
-/*******************************************************
- * עצירת הסורק
- *******************************************************/
-
-function stopScanner() {
+      priority.className =
+        "priority";
 
 
-  scanning = false;
+      if (
+        item.priority === 100
+      ) {
+
+        priority.textContent =
+          "עדיפות גבוהה";
+
+      }
+
+      else {
+
+        priority.textContent =
+          "מועמד";
+
+      }
 
 
-  if (codeReader) {
+      row.appendChild(
+        checkbox
+      );
 
-    try {
 
-      codeReader.reset();
+      row.appendChild(
+        text
+      );
+
+
+      row.appendChild(
+        priority
+      );
+
+
+      container.appendChild(
+        row
+      );
 
     }
-
-    catch (e) {
-
-      console.log(e);
-
-    }
-
-  }
+  );
 
 
-  codeReader =
-    null;
+  container
+    .classList
+    .remove(
+      "hidden"
+    );
 
 
-  const video =
-    document.getElementById(
-      'video'
+  document
+    .getElementById(
+      "selectAll"
+    )
+    .classList
+    .remove(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "clearAll"
+    )
+    .classList
+    .remove(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "confirm"
+    )
+    .classList
+    .remove(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "summary"
+    )
+    .classList
+    .remove(
+      "hidden"
+    );
+
+
+  updateSummary();
+
+}
+
+
+
+/************************************************
+ * בחירת הכול
+ ************************************************/
+
+function selectAll() {
+
+  document
+    .querySelectorAll(
+      "#results input[type=checkbox]"
+    )
+    .forEach(
+      checkbox => {
+
+        checkbox.checked =
+          true;
+
+      }
+    );
+
+
+  updateSummary();
+
+}
+
+
+
+/************************************************
+ * ביטול הכול
+ ************************************************/
+
+function clearAll() {
+
+  document
+    .querySelectorAll(
+      "#results input[type=checkbox]"
+    )
+    .forEach(
+      checkbox => {
+
+        checkbox.checked =
+          false;
+
+      }
+    );
+
+
+  updateSummary();
+
+}
+
+
+
+/************************************************
+ * סיכום
+ ************************************************/
+
+function updateSummary() {
+
+  const checked =
+    document.querySelectorAll(
+      "#results input[type=checkbox]:checked"
+    );
+
+
+  document
+    .getElementById(
+      "summary"
+    )
+    .textContent =
+      "נבחרו " +
+      checked.length +
+      " מק\"טים";
+
+}
+
+
+
+/************************************************
+ * אישור
+ ************************************************/
+
+function confirmSelection() {
+
+
+  const selected = [];
+
+
+  document
+    .querySelectorAll(
+      "#results input[type=checkbox]:checked"
+    )
+    .forEach(
+      function(checkbox) {
+
+        const index =
+          Number(
+            checkbox.dataset.index
+          );
+
+
+        selected.push(
+          candidates[index].value
+        );
+
+      }
     );
 
 
   if (
-    video.srcObject
+    selected.length === 0
   ) {
 
-    video.srcObject
-      .getTracks()
-      .forEach(
-        function(track) {
+    alert(
+      "לא נבחר אף מק\"ט"
+    );
 
-          track.stop();
-
-        }
-      );
+    return;
 
   }
 
 
-  video.srcObject =
-    null;
+  /*
+   * כרגע רק מציגים.
+   *
+   * בשלב הבא נחבר את זה
+   * ל-Google Sheets.
+   */
 
+  alert(
+    "המק\"טים שנבחרו:\n\n" +
+    selected.join("\n")
+  );
 
-  document
-    .getElementById(
-      'startButton'
-    )
-    .classList.remove(
-      'hidden'
-    );
-
-
-  document
-    .getElementById(
-      'stopButton'
-    )
-    .classList.add(
-      'hidden'
-    );
-
-
-  hideResult();
-
-
-  document
-    .getElementById(
-      'status'
-    )
-    .className =
-      'status';
-
-
-  document
-    .getElementById(
-      'status'
-    )
-    .innerHTML =
-      'המצלמה הופסקה';
 
 }
 
 
 
-/*******************************************************
- * אבטחת הצגת טקסט
- *******************************************************/
+/************************************************
+ * ניקוי
+ ************************************************/
 
-function escapeHtml(
-  text
+function clearResults() {
+
+  candidates = [];
+
+
+  document
+    .getElementById(
+      "results"
+    )
+    .innerHTML =
+      "";
+
+
+  document
+    .getElementById(
+      "results"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "selectAll"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "clearAll"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "confirm"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "summary"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "progressBar"
+    )
+    .style.width =
+      "0%";
+
+}
+
+
+
+/************************************************
+ * עצירת מצלמה
+ ************************************************/
+
+function stopCamera() {
+
+
+  if (stream) {
+
+    stream
+      .getTracks()
+      .forEach(
+        track => track.stop()
+      );
+
+    stream = null;
+
+  }
+
+
+  document
+    .getElementById(
+      "video"
+    )
+    .srcObject =
+      null;
+
+
+  document
+    .getElementById(
+      "startCamera"
+    )
+    .classList
+    .remove(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "takePhoto"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "stopCamera"
+    )
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  setStatus(
+    "המצלמה הופסקה"
+  );
+
+}
+
+
+
+/************************************************
+ * סטטוס
+ ************************************************/
+
+function setStatus(
+  text,
+  type = ""
 ) {
 
-  return String(text)
 
-    .replace(
-      /&/g,
-      '&amp;'
-    )
-
-    .replace(
-      /</g,
-      '&lt;'
-    )
-
-    .replace(
-      />/g,
-      '&gt;'
-    )
-
-    .replace(
-      /"/g,
-      '&quot;'
-    )
-
-    .replace(
-      /'/g,
-      '&#039;'
+  const status =
+    document.getElementById(
+      "status"
     );
+
+
+  status.innerHTML =
+    text;
+
+
+  status.className =
+    "status " +
+    type;
 
 }
 
